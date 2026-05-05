@@ -1,0 +1,14 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+linter:
+  rules:
+    # Disable requiring docstrings for everything (can be overkill for rapid dev)
+    public_member_api_docs: false
+    
+    # Optional: other overrides to soften very_good_analysis if needed
+    lines_longer_than_80_chars: false
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
