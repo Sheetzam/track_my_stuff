@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:track_my_stuff/core/theme/app_theme.dart';
+import 'package:track_my_stuff/features/items/presentation/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,22 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hello World',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Track My Stuff'),
-        ),
-        body: Center(
-          // Wrapped in Semantics with identifier as per our AGENT_RULES.md
-          child: Semantics(
-            identifier: 'hello_world_text',
-            child: const Text(
-              'Hello World!',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-        ),
-      ),
+      title: 'TrackMyStuff',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: const HomeScreen(),
     );
   }
 }

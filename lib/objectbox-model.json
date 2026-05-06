@@ -1,0 +1,117 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:8209660961616150004",
+      "lastPropertyId": "8:1752821948716486324",
+      "name": "ObxItem",
+      "properties": [
+        {
+          "id": "1:3170320275972677133",
+          "name": "obxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1602586354031305328",
+          "name": "domainId",
+          "indexId": "1:9152523154553510848",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:7198582446819660948",
+          "name": "containerId",
+          "type": 9
+        },
+        {
+          "id": "4:2988847192137431940",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:3457872147779255392",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "6:5960586229453252678",
+          "name": "imageUrl",
+          "type": 9
+        },
+        {
+          "id": "7:4848435399907978043",
+          "name": "embedding",
+          "indexId": "2:179244632390421209",
+          "type": 28,
+          "flags": 8
+        },
+        {
+          "id": "8:1752821948716486324",
+          "name": "createdAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:3434395577247600285",
+      "lastPropertyId": "7:1971262679901463376",
+      "name": "ObxStorageContainer",
+      "properties": [
+        {
+          "id": "1:6389123881123913010",
+          "name": "obxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:612872124333564145",
+          "name": "domainId",
+          "indexId": "3:1073939660339284209",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:3900117300042925726",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "4:6043857411571692321",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "5:1668808424618534586",
+          "name": "imageUrl",
+          "type": 9
+        },
+        {
+          "id": "6:178597187360689808",
+          "name": "parentId",
+          "type": 9
+        },
+        {
+          "id": "7:1971262679901463376",
+          "name": "createdAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:3434395577247600285",
+  "lastIndexId": "3:1073939660339284209",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

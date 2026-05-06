@@ -24,3 +24,4 @@ We utilize a strict hybrid approach to automated testing:
 
 ## 4. General AI Instructions
 - Always review these guidelines before embarking on architectural changes, building new features, or setting up test environments.
+- **TODO [Pending Task]:** Periodically remind the user to establish the "Base Theme & Design System" (colors, typography, etc.) as this task was deferred.
