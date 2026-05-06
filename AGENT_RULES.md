@@ -24,4 +24,4 @@ We utilize a strict hybrid approach to automated testing:
 
 ## 4. General AI Instructions
 - Always review these guidelines before embarking on architectural changes, building new features, or setting up test environments.
-- **TODO [Pending Task]:** Periodically remind the user to establish the "Base Theme & Design System" (colors, typography, etc.) as this task was deferred.
+- **Resource Constraints (8GB RAM):** The host machine is an 8GB Mac Mini. NEVER run commands that compile multiple heavy targets concurrently (e.g., `flutter run -d all`). Doing so will cause Out Of Memory (OOM) compiler crashes. Always compile or run on ONE specific target at a time.
