@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+---
+- launchApp
+- assertVisible:
+    id: "add_container_fab"
+- tapOn:
+    id: "add_container_fab"
+- assertVisible:
+    id: "image_picker_button"
+- tapOn:
+    id: "container_name_input"
+- inputText: "Garage Shelf 1"
+- tapOn:
+    id: "container_description_input"
+- inputText: "Winter clothes and ski gear"
+- hideKeyboard
+- tapOn:
+    id: "save_container_button"
+- assertVisible:
+    id: "home_screen_title"

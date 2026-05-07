@@ -141,7 +141,7 @@ final class InventoryProvider extends $AsyncNotifierProvider<Inventory, void> {
   Inventory create() => Inventory();
 }
 
-String _$inventoryHash() => r'a33a6714517303dadd0e16a69b8520fd88cb0dfe';
+String _$inventoryHash() => r'e4e50b4eeb76c3d0bcedfe8d064d0a1093563ee5';
 
 /// The main controller for managing inventory items.
 /// It uses the abstract interfaces, ensuring it never touches ObjectBox or TFLite directly.

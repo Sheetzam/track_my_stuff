@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:track_my_stuff/core/interfaces/embedding_engine_interface.dart';
 import 'package:track_my_stuff/core/interfaces/local_database_interface.dart';
 import 'package:track_my_stuff/features/items/domain/item.dart';
+import 'package:track_my_stuff/features/items/domain/storage_container.dart';
 
 part 'inventory_provider.g.dart';
 
@@ -27,6 +28,14 @@ class Inventory extends _$Inventory {
   @override
   FutureOr<void> build() {
     // Initial state is just empty/ready
+  }
+
+  Future<void> addContainer(StorageContainer container) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final db = ref.read(localDatabaseProvider);
+      await db.saveContainer(container);
+    });
   }
 
   Future<void> addItem(Item item) async {
