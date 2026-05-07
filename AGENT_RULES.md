@@ -22,6 +22,41 @@ We utilize a strict hybrid approach to automated testing:
 - **Feature-First Architecture:** The codebase is organized into `lib/core` (app-wide configs, routing, theme), `lib/features` (business logic divided by feature), and `lib/shared` (reusable UI widgets).
   - Inside each feature folder (e.g., `lib/features/inventory/`), adhere to a strict separation of concerns using subfolders: `/data`, `/domain`, `/providers`, and `/ui`.
 
-## 4. General AI Instructions
+## 4. Dual-Machine Development Environment
+We use two machines. The **Ubuntu workstation** is the primary development machine. The **Mac Mini** (8GB RAM, macOS 26.4.1) is used exclusively for tasks that require macOS (iOS builds, iOS Simulator, Xcode).
+
+### Platform Responsibilities
+| Task | Machine |
+|---|---|
+| Code editing, unit tests, `build_runner` | Ubuntu |
+| Android emulator + Maestro E2E | Ubuntu |
+| Linux desktop builds | Ubuntu |
+| Web builds (Chrome) | Ubuntu |
+| iOS Simulator + Maestro E2E | Mac Mini (via SSH) |
+| iOS device builds & code signing | Mac Mini (via SSH) |
+| Xcode project configuration | Mac Mini (via SSH) |
+
+### Code Sync Workflow
+Two git remotes are configured on the Ubuntu machine:
+- **`origin`** → GitHub (`github.com/Sheetzam/track_my_stuff`). Push here **only** when code is passing tests.
+- **`macdev`** → Mac Mini via SSH (`macdev.local:~/dev/track_my_stuff`). Push here for WIP iOS builds and testing.
+
+Workflow:
+1. Develop and commit on **Ubuntu**.
+2. `git push macdev <branch>` to sync WIP code to the Mac for iOS builds/tests.
+3. `git push origin <branch>` only when code passes all tests (unit + E2E).
+4. Any Mac-side fixes should be committed and pushed from the Mac, then pulled on Ubuntu.
+
+### Remote Mac Access
+- SSH hostname: `macdev.local` (user: `sheetzam`).
+- Access via SSH (e.g., `ssh macdev.local 'cd ~/dev/track_my_stuff && flutter build ios --simulator'`).
+- The AI agent can execute commands on the Mac via SSH and observe output.
+
+### Resource Constraints
+- **Mac Mini (8GB RAM):** NEVER run commands that compile multiple heavy targets concurrently (e.g., `flutter run -d all`). This will cause OOM crashes. Always compile or run ONE target at a time.
+- **Ubuntu:** No special constraints, but prefer sequential builds when possible.
+
+## 5. General AI Instructions
 - Always review these guidelines before embarking on architectural changes, building new features, or setting up test environments.
-- **Resource Constraints (8GB RAM):** The host machine is an 8GB Mac Mini. NEVER run commands that compile multiple heavy targets concurrently (e.g., `flutter run -d all`). Doing so will cause Out Of Memory (OOM) compiler crashes. Always compile or run on ONE specific target at a time.
+- Target platforms are **Android** and **iOS**. Linux/Web/Windows desktop targets are secondary.
+- Apple Developer Program membership is not yet active. iOS testing is Simulator-only until further notice.

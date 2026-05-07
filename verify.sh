@@ -1,41 +1,83 @@
 #!/bin/bash
 # verify.sh
-# Run this script to execute all local checks (Code Gen, Linting, Unit Tests, and E2E Tests)
+# Master verification script — runs on Ubuntu.
+# Executes local checks (Code Gen, Linting, Unit Tests, Android E2E),
+# then pushes to Mac and runs iOS E2E remotely.
+#
+# Usage:
+#   ./verify.sh          # Run everything (local + iOS)
+#   ./verify.sh --local  # Run local checks only (skip iOS)
 
-# Exit immediately if a command exits with a non-zero status.
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCAL_ONLY=false
+CURRENT_BRANCH=$(git -C "$SCRIPT_DIR" rev-parse --abbrev-ref HEAD)
+
+if [[ "$1" == "--local" ]]; then
+  LOCAL_ONLY=true
+fi
+
 echo "==========================================="
-echo "🧹 1/4: Running Riverpod Code Gen..."
+echo "🧹 1/5: Running Riverpod Code Gen..."
 echo "==========================================="
 dart run build_runner build -d
 
 echo "==========================================="
-echo "🔎 2/4: Running Strict Linting..."
+echo "🔎 2/5: Running Strict Linting..."
 echo "==========================================="
 flutter analyze
 
 echo "==========================================="
-echo "🧪 3/4: Running Unit Tests..."
+echo "🧪 3/5: Running Unit Tests..."
 echo "==========================================="
 flutter test
 
 echo "==========================================="
-echo "🎭 4/4: Running Maestro E2E Tests..."
+echo "🤖 4/5: Running Android Maestro E2E Tests..."
 echo "==========================================="
-echo "Note: Make sure your iOS Simulator or Android Emulator is actively running!"
-# Run all maestro flows in the directory
-# We pass APP_ID using the --env flag so maestro knows which app to launch
-# Note: iOS uses camelCase (trackMyStuff), Android uses underscores (track_my_stuff)
-maestro test --env APP_ID=com.example.trackMyStuff .maestro/
+echo "Note: Make sure your Android Emulator is actively running!"
+echo "      (Start with: ./start_android_emulator.sh)"
+
+echo ""
+echo "🔨 Building and installing Flutter app on Android Emulator..."
+flutter build apk --debug
+flutter install -d emulator --debug
+
+echo ""
+echo "🎭 Running Maestro flows..."
+maestro test --env APP_ID=com.example.track_my_stuff .maestro/
 
 echo "==========================================="
-echo "🧹 Cleaning up..."
+echo "🧹 Android Cleanup..."
 echo "==========================================="
-# Terminate the app so it's not left in a "unconnected" state
-xcrun simctl terminate booted com.example.trackMyStuff 2>/dev/null || true
 adb shell am force-stop com.example.track_my_stuff 2>/dev/null || true
 
+if $LOCAL_ONLY; then
+  echo "==========================================="
+  echo "✅ Local verifications passed! (iOS skipped with --local)"
+  echo "==========================================="
+  exit 0
+fi
+
 echo "==========================================="
-echo "✅ All verifications passed! You are ready to commit."
+echo "🍎 5/5: Syncing to Mac & Running iOS E2E..."
+echo "==========================================="
+
+# Ensure all current changes are committed before pushing
+if [[ -n $(git -C "$SCRIPT_DIR" status --porcelain) ]]; then
+  echo "⚠️  You have uncommitted changes. Please commit before running iOS verification."
+  echo "   (iOS verification requires a git push to the Mac)"
+  exit 1
+fi
+
+echo "Pushing $CURRENT_BRANCH to macdev..."
+git -C "$SCRIPT_DIR" push macdev "$CURRENT_BRANCH"
+
+echo "Running iOS verification on Mac Mini via SSH..."
+ssh macdev.local "bash ~/dev/track_my_stuff/verify_ios.sh"
+
+echo "==========================================="
+echo "✅ All verifications passed (Ubuntu + Mac)!"
+echo "   You are ready to push to GitHub."
 echo "==========================================="
