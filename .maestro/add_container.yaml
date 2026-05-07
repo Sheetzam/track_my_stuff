@@ -13,7 +13,6 @@ appId: ${APP_ID}
 - tapOn:
     id: "container_description_input"
 - inputText: "Winter clothes and ski gear"
-- hideKeyboard
 - tapOn:
     id: "save_container_button"
 - assertVisible:
