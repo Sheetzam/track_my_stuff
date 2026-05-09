@@ -21,6 +21,16 @@ echo "==========================================="
 echo "🍎 iOS Verification (Mac Mini)"
 echo "==========================================="
 
+# --- Unlock keychain for code signing ---
+# The login keychain must be unlocked for codesign to work in non-interactive SSH sessions.
+# Password is stored in ~/.keychain_pass (chmod 600, never committed to git).
+if [[ -f "$HOME/.keychain_pass" ]]; then
+  security unlock-keychain -p "$(cat "$HOME/.keychain_pass")" "$HOME/Library/Keychains/login.keychain-db"
+  echo "🔑 Keychain unlocked."
+else
+  echo "⚠️  ~/.keychain_pass not found — code signing may fail."
+fi
+
 # --- 1. Boot Simulator ---
 echo ""
 echo "📱 Booting iOS Simulator ($SIMULATOR_NAME)..."
