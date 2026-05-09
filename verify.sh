@@ -45,12 +45,12 @@ flutter build apk --debug
 flutter install -d emulator --debug
 
 echo ""
-echo "🧹 Clearing app data for clean test state..."
-adb shell pm clear com.example.track_my_stuff || true
-
-echo ""
-echo "🎭 Running Maestro flows..."
-maestro test --env APP_ID=com.example.track_my_stuff .maestro/
+echo "🎭 Running Maestro flows individually with isolation..."
+for flow in .maestro/*.yaml; do
+  echo "🏃 Running $flow..."
+  adb shell pm clear com.example.track_my_stuff || true
+  maestro test --env APP_ID=com.example.track_my_stuff "$flow"
+done
 
 echo "==========================================="
 echo "🧹 Android Cleanup..."
