@@ -6,6 +6,7 @@ class Item {
     required this.description,
     required this.imageUrl,
     required this.createdAt,
+    this.vector,
   });
 
   factory Item.fromMap(Map<String, dynamic> map) {
@@ -16,6 +17,7 @@ class Item {
       description: map['description'] as String,
       imageUrl: map['imageUrl'] as String,
       createdAt: DateTime.parse(map['createdAt'] as String),
+      vector: (map['vector'] as List?)?.map((e) => e as double).toList(),
     );
   }
 
@@ -25,6 +27,7 @@ class Item {
   final String description;
   final String imageUrl;
   final DateTime createdAt;
+  final List<double>? vector;
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,6 +37,7 @@ class Item {
       'description': description,
       'imageUrl': imageUrl,
       'createdAt': createdAt.toIso8601String(),
+      'vector': vector,
     };
   }
 
@@ -44,6 +48,7 @@ class Item {
     String? description,
     String? imageUrl,
     DateTime? createdAt,
+    List<double>? vector,
   }) {
     return Item(
       id: id ?? this.id,
@@ -52,6 +57,7 @@ class Item {
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
       createdAt: createdAt ?? this.createdAt,
+      vector: vector ?? this.vector,
     );
   }
 }

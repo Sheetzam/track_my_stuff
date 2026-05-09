@@ -1,0 +1,45 @@
+00:00 +0: loading /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/tflite_embedding_engine_test.dart
+../../.pub-cache/hosted/pub.dev/tflite_flutter-0.10.4/lib/src/tensor.dart:58:12: Error: The method 'UnmodifiableUint8ListView' isn't defined for the type 'Tensor'.
+ - 'Tensor' is from 'package:tflite_flutter/src/tensor.dart' ('../../.pub-cache/hosted/pub.dev/tflite_flutter-0.10.4/lib/src/tensor.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'UnmodifiableUint8ListView'.
+    return UnmodifiableUint8ListView(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/tflite_embedding_engine_test.dart [E]
+  Failed to load "/home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/tflite_embedding_engine_test.dart":
+  Compilation failed for testPath=/home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/tflite_embedding_engine_test.dart: ../../.pub-cache/hosted/pub.dev/tflite_flutter-0.10.4/lib/src/tensor.dart:58:12: Error: The method 'UnmodifiableUint8ListView' isn't defined for the type 'Tensor'.
+   - 'Tensor' is from 'package:tflite_flutter/src/tensor.dart' ('../../.pub-cache/hosted/pub.dev/tflite_flutter-0.10.4/lib/src/tensor.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'UnmodifiableUint8ListView'.
+      return UnmodifiableUint8ListView(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/local_vision_engine_test.dart
+00:00 +0 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/tflite_embedding_engine_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 939:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:00 +0 -1: /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/local_vision_engine_test.dart: LocalVisionEngine should define the interface methods
+00:00 +1 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/ml_kit_object_detector_test.dart
+00:00 +1 -1: /home/sheetzam/dev/track_my_stuff/test/features/items/data/ml/ml_kit_object_detector_test.dart: MlKitObjectDetector should return empty list when no objects detected
+00:00 +2 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/presentation/home_screen_test.dart
+00:00 +2 -1: /home/sheetzam/dev/track_my_stuff/test/features/items/presentation/home_screen_test.dart: HomeScreen displays title and add button
+00:01 +3 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/presentation/add_container_screen_test.dart
+00:02 +3 -1: /home/sheetzam/dev/track_my_stuff/test/features/items/presentation/add_container_screen_test.dart: AddContainerScreen displays form fields and buttons
+00:02 +4 -1: loading /home/sheetzam/dev/track_my_stuff/test/features/items/providers/inventory_provider_test.dart
+00:03 +4 -1: /home/sheetzam/dev/track_my_stuff/test/features/items/providers/inventory_provider_test.dart: InventoryProvider Tests adding an item successfully saves it to the local database
+00:03 +5 -1: Some tests failed.

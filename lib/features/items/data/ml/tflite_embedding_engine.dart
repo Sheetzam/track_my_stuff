@@ -6,6 +6,8 @@ import 'package:track_my_stuff/core/interfaces/embedding_engine_interface.dart';
 class TfliteEmbeddingEngine implements IEmbeddingEngine {
   Interpreter? _interpreter;
 
+  TfliteEmbeddingEngine({Interpreter? interpreter}) : _interpreter = interpreter;
+
   @override
   Future<void> init() async {
     if (_interpreter != null) return;
