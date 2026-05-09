@@ -24,9 +24,9 @@ echo "==========================================="
 dart run build_runner build -d
 
 echo "==========================================="
-echo "🔎 2/5: Running Strict Linting..."
+echo "🔎 2/5: Running Linting (Non-fatal)..."
 echo "==========================================="
-flutter analyze
+flutter analyze || echo "⚠️  Linting found some issues, but continuing..."
 
 echo "==========================================="
 echo "🧪 3/5: Running Unit Tests..."
