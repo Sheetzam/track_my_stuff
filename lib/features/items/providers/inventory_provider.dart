@@ -4,12 +4,16 @@ import 'package:track_my_stuff/core/interfaces/embedding_engine_interface.dart';
 import 'package:track_my_stuff/core/interfaces/local_database_interface.dart';
 import 'package:track_my_stuff/core/interfaces/object_detection_interface.dart';
 import 'package:track_my_stuff/core/interfaces/vision_llm_interface.dart';
+import 'package:track_my_stuff/features/items/data/ml/local_vision_engine.dart';
+import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector.dart';
+import 'package:track_my_stuff/features/items/data/ml/tflite_embedding_engine.dart';
 import 'package:track_my_stuff/features/items/domain/item.dart';
 import 'package:track_my_stuff/features/items/domain/storage_container.dart';
 
 part 'inventory_provider.g.dart';
 
 /// Provider for the local database interface.
+/// Must be overridden in main() with an initialized ObjectBoxRepository.
 @riverpod
 ILocalDatabase localDatabase(Ref ref) {
   throw UnimplementedError('Must be overridden in main()');
@@ -17,21 +21,15 @@ ILocalDatabase localDatabase(Ref ref) {
 
 /// Provider for the embedding engine interface.
 @riverpod
-IEmbeddingEngine embeddingEngine(Ref ref) {
-  throw UnimplementedError('Must be overridden in main()');
-}
+IEmbeddingEngine embeddingEngine(Ref ref) => TfliteEmbeddingEngine();
 
 /// Provider for the object detection interface.
 @riverpod
-IObjectDetectionEngine objectDetectionEngine(Ref ref) {
-  throw UnimplementedError('Must be overridden in main()');
-}
+IObjectDetectionEngine objectDetectionEngine(Ref ref) => MlKitObjectDetector();
 
 /// Provider for the vision LLM interface.
 @riverpod
-IVisionLLMEngine visionLLMEngine(Ref ref) {
-  throw UnimplementedError('Must be overridden in main()');
-}
+IVisionLLMEngine visionLLMEngine(Ref ref) => LocalVisionEngine();
 
 /// The main controller for managing inventory items.
 @riverpod

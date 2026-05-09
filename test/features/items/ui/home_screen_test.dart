@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:track_my_stuff/core/interfaces/local_database_interface.dart';
-import 'package:track_my_stuff/features/items/presentation/home_screen.dart';
+import 'package:track_my_stuff/features/items/ui/home_screen.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
 
 import 'home_screen_test.mocks.dart';

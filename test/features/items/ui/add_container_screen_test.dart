@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:track_my_stuff/features/items/presentation/add_container_screen.dart';
+import 'package:track_my_stuff/features/items/ui/add_container_screen.dart';
 
 void main() {
   testWidgets('AddContainerScreen displays form fields and buttons', (tester) async {

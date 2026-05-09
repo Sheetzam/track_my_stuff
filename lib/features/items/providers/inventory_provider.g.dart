@@ -9,16 +9,19 @@ part of 'inventory_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Provider for the local database interface.
+/// Must be overridden in main() with an initialized ObjectBoxRepository.
 
 @ProviderFor(localDatabase)
 final localDatabaseProvider = LocalDatabaseProvider._();
 
 /// Provider for the local database interface.
+/// Must be overridden in main() with an initialized ObjectBoxRepository.
 
 final class LocalDatabaseProvider
     extends $FunctionalProvider<ILocalDatabase, ILocalDatabase, ILocalDatabase>
     with $Provider<ILocalDatabase> {
   /// Provider for the local database interface.
+  /// Must be overridden in main() with an initialized ObjectBoxRepository.
   LocalDatabaseProvider._()
     : super(
         from: null,
@@ -103,7 +106,7 @@ final class EmbeddingEngineProvider
   }
 }
 
-String _$embeddingEngineHash() => r'b1d2074dc555a46d979a84eaa5c65946c150b4e2';
+String _$embeddingEngineHash() => r'0743a321bc1e2751fc1aa84eaa21933150a1532e';
 
 /// Provider for the object detection interface.
 
@@ -156,7 +159,7 @@ final class ObjectDetectionEngineProvider
 }
 
 String _$objectDetectionEngineHash() =>
-    r'c90219cb2a88e9eacc00aa43b2bd4bc3b714b97f';
+    r'471e2a2402c7fffb0e04e6b241f1aa6636118a47';
 
 /// Provider for the vision LLM interface.
 
@@ -207,7 +210,7 @@ final class VisionLLMEngineProvider
   }
 }
 
-String _$visionLLMEngineHash() => r'cf76d18720ef93c1d06174c0e2dc2e13ee708a77';
+String _$visionLLMEngineHash() => r'd6277513678d5fe2391440825586a784e34fcd44';
 
 /// The main controller for managing inventory items.
 

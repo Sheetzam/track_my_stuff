@@ -70,6 +70,7 @@ The project currently faces specific architectural limitations regarding Google 
 
 ## 6. General AI Instructions
 - Always review these guidelines before embarking on architectural changes, building new features, or setting up test environments.
+- **TODO.md:** The file `TODO.md` at the repo root is the source of truth for outstanding work. Keep it up to date: check off items as they are completed, and add new items when new issues or tasks are identified.
 - Target platforms are **Android** and **iOS**. Linux/Web/Windows desktop targets are secondary.
 - Apple Developer Program membership is not yet active. iOS testing is Simulator-only until further notice.
 - **Verification:** Always run `./verify.sh` to trigger the cross-platform test suite (Local Unit Tests + Mac Mini iOS E2E).

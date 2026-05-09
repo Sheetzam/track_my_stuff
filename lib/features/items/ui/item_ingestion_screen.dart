@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:track_my_stuff/features/items/presentation/review_items_screen.dart';
+import 'package:track_my_stuff/features/items/ui/review_items_screen.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
 import 'package:track_my_stuff/features/items/domain/storage_container.dart';
 

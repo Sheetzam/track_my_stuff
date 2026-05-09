@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:track_my_stuff/features/items/domain/storage_container.dart';
-import 'package:track_my_stuff/features/items/presentation/add_container_screen.dart';
-import 'package:track_my_stuff/features/items/presentation/item_ingestion_screen.dart';
-import 'package:track_my_stuff/features/items/presentation/search_screen.dart';
+import 'package:track_my_stuff/features/items/ui/add_container_screen.dart';
+import 'package:track_my_stuff/features/items/ui/item_ingestion_screen.dart';
+import 'package:track_my_stuff/features/items/ui/search_screen.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
 
 class HomeScreen extends ConsumerWidget {

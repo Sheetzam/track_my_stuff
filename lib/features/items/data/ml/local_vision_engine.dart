@@ -9,6 +9,8 @@ import 'package:track_my_stuff/core/interfaces/vision_llm_interface.dart';
 class LocalVisionEngine implements IVisionLLMEngine {
   Llama? _llama;
 
+  LocalVisionEngine({Llama? llama}) : _llama = llama;
+
   @override
   Future<void> init() async {
     if (_llama != null) return;
