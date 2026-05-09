@@ -19,6 +19,7 @@ dependencies:
   llama_cpp_dart: ^0.2.2
   objectbox: any
   objectbox_flutter_libs: any
+  objective_c: any
   path_provider: any
   riverpod_annotation: ^4.0.2
   tflite_flutter: ^0.12.1
