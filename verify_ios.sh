@@ -25,6 +25,7 @@ echo "==========================================="
 echo ""
 echo "📱 Booting iOS Simulator ($SIMULATOR_NAME)..."
 xcrun simctl boot "$SIMULATOR_NAME" 2>/dev/null || true
+open -a Simulator
 # Wait for the simulator to be fully booted
 xcrun simctl bootstatus "$SIMULATOR_NAME" -b
 
