@@ -31,7 +31,8 @@ xcrun simctl bootstatus "$SIMULATOR_NAME" -b
 
 # --- 2. Resolve Dependencies ---
 echo ""
-echo "📦 Resolving dependencies..."
+echo "🧹 Cleaning and resolving dependencies..."
+rm -rf build/ ios/Pods/ ios/Podfile.lock
 flutter pub get
 
 # --- 3. Build & Install ---
