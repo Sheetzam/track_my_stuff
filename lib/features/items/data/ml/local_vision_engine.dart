@@ -22,11 +22,11 @@ class LocalVisionEngine implements IVisionLLMEngine {
       // In version 0.1.2, parameters are passed via positional arguments
       _llama = Llama(
         modelPath,
-        ModelParams()..nGpuLayers = 99,
-        ContextParams()..nCtx = 2048,
-        null, // SamplerParams
-        false, // verbose
-        mmprojPath,
+        modelParams: ModelParams()..nGpuLayers = 99,
+        contextParams: ContextParams()..nCtx = 2048,
+        samplerParams: null,
+        verbose: false,
+        mmprojPath: mmprojPath,
       );
     } catch (e) {
       print('Error initializing Local Vision Engine: $e');
@@ -42,7 +42,7 @@ class LocalVisionEngine implements IVisionLLMEngine {
     
     // In 0.1.2, generateWithMedia takes an 'inputs' list of LlamaInput objects
     final stream = _llama!.generateWithMedia(
-      "<IMAGE>\nUser: $prompt\nAssistant:", // Moondream prompt format
+      "<image>\nUser: $prompt\nAssistant:", // Moondream prompt format
       inputs: [LlamaImage.fromFile(imageFile)],
     );
 

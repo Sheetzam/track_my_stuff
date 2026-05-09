@@ -13,13 +13,12 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^3.3.1
   google_fonts: ^8.1.0
-  google_mlkit_object_detection: ^0.13.0
+  google_mlkit_object_detection: ^0.15.1
   image: ^4.5.2
   image_picker: any
-  llama_cpp_dart: ^0.1.0
+  llama_cpp_dart: ^0.2.2
   objectbox: any
   objectbox_flutter_libs: any
-  objective_c: any
   path_provider: any
   riverpod_annotation: ^4.0.2
   tflite_flutter: ^0.12.1
