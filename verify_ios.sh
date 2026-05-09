@@ -55,7 +55,7 @@ if [[ -z "$DEVICE_ID" ]]; then
 fi
 
 echo "   Using simulator: $SIMULATOR_NAME ($DEVICE_ID)"
-flutter build ios --simulator --debug
+arch -x86_64 flutter build ios --simulator --debug
 flutter install -d "$DEVICE_ID"
 
 # --- 4. Run Maestro E2E ---
