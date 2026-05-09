@@ -28,7 +28,10 @@ Humans possess many items that are not in daily use, making it difficult to reme
 - **Semantic Vector Search:** We will use **TFLite (`tflite_flutter`)** to run a lightweight, on-device embedding model (e.g., MiniLM) to convert item descriptions into vector embeddings. 
 - **Local Database:** We will use **ObjectBox** as our local database due to its native support for blazing-fast, on-device vector similarity search.
 - **Strict Modularity (Dependency Inversion):** To future-proof the application against the rapidly evolving AI landscape, all core technologies (TFLite, ObjectBox, ML Kit) MUST be hidden behind abstract interfaces (e.g., `IEmbeddingEngine`, `ILocalDatabase`). This ensures that swapping out TFLite or ObjectBox for a newer engine in the future requires zero changes to the application's business logic or UI.
-- **On-Device Vision:** We will utilize lightweight, on-device machine learning (e.g., Google ML Kit) to draw bounding boxes and identify multiple objects in a single camera frame locally.
+- **On-Device Vision:** We utilize a hybrid strategy for intelligent tagging:
+  - **Object Detection:** Google ML Kit is used for initial bounding box detection and object extraction.
+  - **Vision LLM:** A local vision-language model (e.g., Moondream2 via `llama_cpp_dart`) is used for deeper semantic analysis and automatic tag generation from extracted item images.
+  - **Platform Modularity:** Given the architectural variations between Apple Silicon simulators and physical devices, the vision system must support mock/alternative engines during development to maintain CI/CD stability.
 
 ---
 

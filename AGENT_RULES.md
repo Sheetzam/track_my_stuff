@@ -6,11 +6,12 @@ You are assisting in the development of the **TrackMyStuff** Flutter application
 - **ALWAYS write tests first.** Before implementing any new feature, modifying existing business logic, or building UI, you must write a failing test case.
 - Once the test is written, implement the minimum code required to make the test pass.
 - Do not write new code without corresponding test coverage.
+- As you iterate on code, update tests and test coverage to reflect changes. If a test fails, fix the test or fix the code.
 
 ## 2. Hybrid Testing Strategy (Maestro + integration_test)
 We utilize a strict hybrid approach to automated testing:
 
-- **Maestro (Black-Box E2E):** Use Maestro exclusively for overarching user journeys, core happy paths, and tests requiring native OS interactions (permissions, external apps). 
+- **Maestro (Black-Box E2E):** Use Maestro for overarching user journeys, core happy paths, and tests requiring native OS interactions (permissions, external apps). 
   - Maestro test flows should be written in YAML and placed in the `.maestro/` directory.
   - When creating interactive Flutter UI components, you MUST wrap them in a `Semantics` widget and assign a unique `identifier` (e.g., `Semantics(identifier: 'login_submit_button', child: ...)`). 
   - Use these semantic identifiers in your Maestro YAML files (`tapOn:\n    id: "login_submit_button"`).
@@ -56,7 +57,19 @@ Workflow:
 - **Mac Mini (8GB RAM):** NEVER run commands that compile multiple heavy targets concurrently (e.g., `flutter run -d all`). This will cause OOM crashes. Always compile or run ONE target at a time.
 - **Ubuntu:** No special constraints, but prefer sequential builds when possible.
 
-## 5. General AI Instructions
+## 5. iOS & ML Kit Limitations (IMPORTANT)
+The project currently faces specific architectural limitations regarding Google ML Kit and iOS Simulators:
+
+- **ML Kit Architecture Conflict:** Google ML Kit (specifically `MLImage`) does NOT provide an `arm64-simulator` slice. It only provides `x86_64` for simulators.
+- **iOS 26+ Requirement:** On Apple Silicon Mac runners (M1/M2/M3), iOS 26+ simulators strictly require `arm64` binaries. They do not reliably support `x86_64` (Rosetta) for Flutter apps using native assets.
+- **Native Assets (objective_c):** Modern Flutter dependencies (like `path_provider` via `objective_c`) use the **Native Assets** feature. Excluding `arm64` in the `Podfile` to fix ML Kit often breaks the Native Assets build hook, leading to `references objective_c, which was not found` errors.
+- **Current Strategy:** 
+  - `google_mlkit_object_detection` is **disabled/commented out** in `pubspec.yaml` for iOS Simulator builds.
+  - `MlKitObjectDetector` is implemented with a **Mock** fallback for the simulator.
+  - **NEVER** exclude `arm64` in the `Podfile` globally, as it breaks the `objective_c` dependency required for app-wide file path resolution.
+
+## 6. General AI Instructions
 - Always review these guidelines before embarking on architectural changes, building new features, or setting up test environments.
 - Target platforms are **Android** and **iOS**. Linux/Web/Windows desktop targets are secondary.
 - Apple Developer Program membership is not yet active. iOS testing is Simulator-only until further notice.
+- **Verification:** Always run `./verify.sh` to trigger the cross-platform test suite (Local Unit Tests + Mac Mini iOS E2E).
