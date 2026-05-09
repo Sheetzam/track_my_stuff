@@ -19,12 +19,14 @@ class LocalVisionEngine implements IVisionLLMEngine {
       final mmprojPath = await _copyAssetToFile('assets/models/vision_mmproj.gguf');
 
       // 2. Initialize Llama
-      // In version 0.1.2, parameters are passed via cascades or specific setters
+      // In version 0.1.2, parameters are passed via positional arguments
       _llama = Llama(
         modelPath,
-        mmprojPath: mmprojPath,
-        contextParams: ContextParams()..nCtx = 2048,
-        modelParams: ModelParams()..nGpuLayers = 99,
+        ModelParams()..nGpuLayers = 99,
+        ContextParams()..nCtx = 2048,
+        null, // SamplerParams
+        false, // verbose
+        mmprojPath,
       );
     } catch (e) {
       print('Error initializing Local Vision Engine: $e');
@@ -38,10 +40,10 @@ class LocalVisionEngine implements IVisionLLMEngine {
 
     final response = StringBuffer();
     
-    // In 0.1.2, generateWithMedia is the way to handle multimodal input
+    // In 0.1.2, generateWithMedia takes an 'inputs' list of LlamaInput objects
     final stream = _llama!.generateWithMedia(
       "<IMAGE>\nUser: $prompt\nAssistant:", // Moondream prompt format
-      images: [imageFile.path], // Some versions take paths, some take LlamaImage
+      inputs: [LlamaImage.fromFile(imageFile)],
     );
 
     await for (final token in stream) {
