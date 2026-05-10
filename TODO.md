@@ -27,7 +27,7 @@
   - Tracking: https://developer.apple.com/forums/thread/820586
   - The app itself builds, signs, and installs on the device successfully — only Maestro automation is blocked.
 - [x] **#7 Wire up embedding generation on item save:** `Inventory.addItem()` now generates a 384-dim embedding from `name + description` via `TfliteEmbeddingEngine` before saving to ObjectBox's HNSW index.
-- [ ] **#8 Search result navigation:** Tapping a search result does nothing (`// TODO(sheetzam): Navigate to container/item detail` in `search_screen.dart`). Need a detail screen showing the container photo, description, and matched item.
+- [x] **#8 Search result navigation:** `ItemDetailScreen` shows the matched item (image, name, tags) and its parent container (photo, name, description). Tapping a search result navigates there.
 - [ ] **#9 Container detail/browse screen:** Tapping a container on the home screen goes straight to the ingestion flow. There's no way to view items already stored in a container.
 - [x] **#10 Proper tokenizer for TFLite embeddings:** Implemented `WordPieceTokenizer` with full BERT-compatible algorithm + 30,522-token vocabulary from all-MiniLM-L6-v2.
 
