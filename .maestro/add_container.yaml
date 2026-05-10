@@ -1,10 +1,10 @@
 appId: ${APP_ID}
 ---
 - launchApp
-- assertVisible:
-    id: "add_container_fab"
+- assertVisible: "New Container"
 - tapOn:
-    id: "add_container_fab"
+    text: "New Container"
+    retryTapIfNoChange: true
 - assertVisible:
     id: "image_picker_button"
 - tapOn:

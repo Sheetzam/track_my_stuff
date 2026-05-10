@@ -5,5 +5,4 @@ appId: ${APP_ID}
     id: "home_screen_title"
 - assertVisible:
     id: "empty_state_text"
-- assertVisible:
-    id: "add_container_fab"
+- assertVisible: "New Container"
