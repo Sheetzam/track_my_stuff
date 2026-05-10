@@ -61,7 +61,14 @@ patched_count = 0
   target_dir = File.join(pods_support, pod_target)
   next unless File.directory?(target_dir)
 
-  Dir.glob(File.join(target_dir, '*-dev.xcconfig')).each do |xcconfig_path|
+  # Patch both the base xcconfigs (debug, release, profile) and the
+  # flavor-specific ones (*-dev). Flutter's xcconfig chain includes the
+  # base configs, so those must be patched for simulator builds.
+  Dir.glob(File.join(target_dir, '*.xcconfig')).each do |xcconfig_path|
+    # Only patch dev-related configs and base configs (which are used by dev flavor)
+    basename = File.basename(xcconfig_path)
+    next if basename.include?('-prod') # Never patch prod configs
+
     content = File.read(xcconfig_path)
     original = content.dup
     remove_mlkit_refs(content, mlkit_frameworks)

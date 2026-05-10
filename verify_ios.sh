@@ -62,6 +62,9 @@ if [[ -z "$SIMULATOR_DEVICE_ID" ]]; then
 fi
 
 echo "Building for simulator ($SIMULATOR_NAME)..."
+# Flutter's xcconfig chain always includes base Pods-Runner.debug.xcconfig which
+# links ML Kit. Patch it to remove ML Kit refs for the simulator build.
+ruby "$PROJECT_DIR/ios/patch_dev_xcconfigs.rb"
 flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false
 flutter install -d "$SIMULATOR_DEVICE_ID" --flavor dev
 
@@ -84,6 +87,10 @@ echo "==========================================="
 if ! flutter devices 2>/dev/null | grep -q "$DEVICE_UDID"; then
   echo "⚠️  Physical iPhone ($DEVICE_UDID) not connected — skipping Phase 2."
 else
+  # Restore ML Kit linker refs by re-running pod install (undoes simulator patches)
+  echo "Restoring Pods for device build (re-running pod install)..."
+  cd "$PROJECT_DIR/ios" && pod install && cd "$PROJECT_DIR"
+
   echo "Building release for physical device..."
   flutter build ios --release --flavor prod
 
