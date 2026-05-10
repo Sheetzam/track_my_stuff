@@ -72,6 +72,9 @@ echo "Building for simulator ($SIMULATOR_NAME)..."
 sed -i '' 's/^  google_mlkit_object_detection:/  # google_mlkit_object_detection:/' pubspec.yaml
 flutter pub get
 flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false -t lib/main_dev.dart
+
+# Uninstall any previous version before installing
+xcrun simctl uninstall "$SIMULATOR_DEVICE_ID" "$SIMULATOR_APP_ID" 2>/dev/null || true
 flutter install -d "$SIMULATOR_DEVICE_ID" --flavor dev
 
 echo "🎭 Running Maestro E2E on Simulator..."
