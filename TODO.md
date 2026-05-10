@@ -26,8 +26,8 @@
   - Options: (a) upgrade iPhone to one running iOS 26.x, (b) downgrade Xcode to 26.2, (c) wait for Apple fix
   - Tracking: https://developer.apple.com/forums/thread/820586
   - The app itself builds, signs, and installs on the device successfully — only Maestro automation is blocked.
-- [ ] **#7 Wire up embedding generation on item save:** `ReviewItemsScreen` saves items without generating embeddings. Semantic search returns nothing because `Item.vector` is never populated. Need to call `embeddingEngine.generateEmbedding()` on item description/tags before saving.
+- [x] **#7 Wire up embedding generation on item save:** `Inventory.addItem()` now generates a 384-dim embedding from `name + description` via `TfliteEmbeddingEngine` before saving to ObjectBox's HNSW index.
 - [ ] **#8 Search result navigation:** Tapping a search result does nothing (`// TODO(sheetzam): Navigate to container/item detail` in `search_screen.dart`). Need a detail screen showing the container photo, description, and matched item.
 - [ ] **#9 Container detail/browse screen:** Tapping a container on the home screen goes straight to the ingestion flow. There's no way to view items already stored in a container.
-- [ ] **#10 Proper tokenizer for TFLite embeddings:** `TfliteEmbeddingEngine` uses naive char-code tokenization (placeholder). MiniLM-L6-v2 requires WordPiece tokenization to produce meaningful embeddings.
+- [x] **#10 Proper tokenizer for TFLite embeddings:** Implemented `WordPieceTokenizer` with full BERT-compatible algorithm + 30,522-token vocabulary from all-MiniLM-L6-v2.
 
