@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector.dart';
+import 'package:track_my_stuff/features/items/data/ml/mock_object_detector.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +29,12 @@ void main() {
     );
   });
 
-  // Unit tests run on Linux where _useMlKit == false, so _mockDetect is exercised.
-  group('MlKitObjectDetector (mock path — non-Android/iOS environment)', () {
+  // Unit tests run on Linux where ML Kit is unavailable, so we test MockObjectDetector.
+  group('MockObjectDetector (non-Android/iOS environment)', () {
     test('returns one DetectedObject covering the whole image', () async {
       final imageFile = await _writeTempJpeg();
 
-      final detector = MlKitObjectDetector();
+      final detector = MockObjectDetector();
       final results = await detector.detectObjects(imageFile);
 
       expect(results.length, 1);
@@ -49,7 +49,7 @@ void main() {
     test('bounding box covers full image dimensions', () async {
       final imageFile = await _writeTempJpeg();
 
-      final detector = MlKitObjectDetector();
+      final detector = MockObjectDetector();
       final results = await detector.detectObjects(imageFile);
 
       expect(results.first.boundingBox.left, 0);
@@ -65,7 +65,7 @@ void main() {
       final badFile = File('${Directory.systemTemp.path}/bad_image.jpg');
       await badFile.writeAsBytes([0, 1, 2, 3]);
 
-      final detector = MlKitObjectDetector();
+      final detector = MockObjectDetector();
       final results = await detector.detectObjects(badFile);
 
       expect(results, isEmpty);
