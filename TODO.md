@@ -9,3 +9,4 @@
   - [x] `verify.sh`: toggles ML Kit in pubspec around Android build
   - [ ] **NEXT: Run `./verify.sh` end-to-end to confirm full pipeline passes**
 - [x] **#4 ML engine unit tests:** No tests exist for `TfliteEmbeddingEngine`, `LocalVisionEngine`, or `MlKitObjectDetector`. Write them once the implementations are complete.
+- [ ] **#5 Flutter build flavors for ML Kit:** The current `verify_ios.sh` and `verify.sh` toggle `google_mlkit_object_detection` in `pubspec.yaml` via `sed` (comment/uncomment) around simulator vs device builds. This is fragile. The proper fix is to use **Flutter build flavors** (e.g., `dev` and `prod`) with separate Podfiles or conditional pod inclusion, so `flutter build ios --flavor dev` excludes ML Kit (simulator-safe) and `flutter build ios --flavor prod` includes it (device builds). This eliminates the pubspec toggling entirely.
