@@ -70,4 +70,38 @@ post_install do |installer|
     end
     target.user_project.save
   end
+
+  # Patch the generated xcconfig files for dev configurations to remove
+  # ML Kit framework linker references. post_install runs AFTER xcconfig
+  # generation, so these modifications persist.
+  mlkit_fw_names = %w[
+    MLImage MLKitCommon MLKitCore MLKitImageLabelingCommon
+    MLKitObjectDetection MLKitObjectDetectionCommon MLKitObjectDetectionCustom
+    MLKitVision MLKitVisionKit GoogleMLKit google_mlkit_commons
+    google_mlkit_object_detection
+  ]
+
+  pods_support = File.join(__dir__, 'Pods', 'Target Support Files')
+  %w[Pods-Runner Pods-RunnerTests].each do |pod_target|
+    target_dir = File.join(pods_support, pod_target)
+    next unless File.directory?(target_dir)
+
+    Dir.glob(File.join(target_dir, '*-dev.xcconfig')).each do |path|
+      content = File.read(path)
+      mlkit_fw_names.each do |fw|
+        # Remove -framework "MLKit..." from OTHER_LDFLAGS
+        content.gsub!(/-framework\s+"#{Regexp.escape(fw)}"\s*/, '')
+        # Remove framework search paths
+        content.gsub!(/"\$\{PODS_CONFIGURATION_BUILD_DIR\}\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
+        content.gsub!(/"\$\{PODS_ROOT\}\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
+        content.gsub!(/"-F\$\{PODS_CONFIGURATION_BUILD_DIR\}\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
+        content.gsub!(/"\$\{PODS_ROOT\}\/Headers\/Public\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
+      end
+      # Remove GoogleMLKit source path (unquoted)
+      content.gsub!(/\$\{PODS_ROOT\}\/GoogleMLKit[^\s]*\s*/, '')
+      # Clean up double spaces
+      content.gsub!(/  +/, ' ')
+      File.write(path, content)
+    end
+  end
 end
