@@ -63,14 +63,39 @@ The project currently faces specific architectural limitations regarding Google 
 - **ML Kit Architecture Conflict:** Google ML Kit (specifically `MLImage`) does NOT provide an `arm64-simulator` slice. It only provides `x86_64` for simulators.
 - **iOS 26+ Requirement:** On Apple Silicon Mac runners (M1/M2/M3), iOS 26+ simulators strictly require `arm64` binaries. They do not reliably support `x86_64` (Rosetta) for Flutter apps using native assets.
 - **Native Assets (objective_c):** Modern Flutter dependencies (like `path_provider` via `objective_c`) use the **Native Assets** feature. Excluding `arm64` in the `Podfile` to fix ML Kit often breaks the Native Assets build hook, leading to `references objective_c, which was not found` errors.
-- **Current Strategy:** 
-  - `google_mlkit_object_detection` is **disabled/commented out** in `pubspec.yaml` for iOS Simulator builds.
-  - `MlKitObjectDetector` is implemented with a **Mock** fallback for the simulator.
+- **Current Strategy (Build Flavors):**
+  - `google_mlkit_object_detection` is permanently in `pubspec.yaml` but **commented out by `verify_ios.sh`** before iOS Simulator builds, then restored before device builds.
+  - Two entry points: `main.dart` (imports real `MlKitObjectDetector`, used for prod/device builds) and `main_dev.dart` (no ML Kit import, used for simulator builds with `-t lib/main_dev.dart`).
+  - The `objectDetectionEngineProvider` defaults to `MockObjectDetector`. `main.dart` overrides it with the real `MlKitObjectDetector`.
+  - Android uses `--flavor prod` (ML Kit always works). iOS Simulator uses `--flavor dev` + `--dart-define=USE_MLKIT=false`.
   - **NEVER** exclude `arm64` in the `Podfile` globally, as it breaks the `objective_c` dependency required for app-wide file path resolution.
+- **iOS Flavor Setup (one-time per clone on Mac Mini):**
+  ```bash
+  cd ios && bash setup_flavors.sh
+  ```
+  This runs `add_flavor_configs.rb`, `pod install`, and `fix_flavor_xcconfigs.rb`.
 
-## 6. General AI Instructions
+## 6. Physical iOS Device Testing (maestro-runner)
+- The physical test device is an **iPhone 6s running iOS 15.8.7**. Maestro CLI requires iOS 16+, so we use **`maestro-runner`** (by DeviceLab) for physical device E2E.
+- `maestro-runner` supports iOS 12+ and runs the same Maestro YAML flows with zero changes.
+- It uses **WebDriverAgent (WDA)** for iOS automation, which requires code signing.
+- **Free Apple Developer Account Limitation:** The WDA provisioning profile expires every **7 days**. When it expires, `maestro-runner` will fail with a signing/provisioning error. To fix:
+  1. SSH into the Mac Mini (or Screen Share).
+  2. Run: `maestro-runner wda update` (or just re-run the test — it rebuilds WDA automatically).
+  3. If Xcode complains about provisioning, open Xcode GUI and re-trust the profile, or delete `~/.maestro-runner/cache/wda-builds/` and retry.
+- **Required Xcode setup (one-time):** The Apple ID (`sheetzam@earthlink.net`) must be added to Xcode → Settings → Accounts. This was done manually via Screen Sharing.
+- **Usage:**
+  ```bash
+  maestro-runner --platform ios \
+    --device c436e44ff43f1f713f842da9f106d5ae8658efb0 \
+    --team-id 84H8T5TLQ2 \
+    -e APP_ID=com.example.trackMyStuff \
+    test .maestro/
+  ```
+
+## 7. General AI Instructions
 - Always review these guidelines before embarking on architectural changes, building new features, or setting up test environments.
 - **TODO.md:** The file `TODO.md` at the repo root is the source of truth for outstanding work. Keep it up to date: check off items as they are completed, and add new items when new issues or tasks are identified.
 - Target platforms are **Android** and **iOS**. Linux/Web/Windows desktop targets are secondary.
-- Apple Developer Program membership is not yet active. iOS testing is Simulator-only until further notice.
+- Apple Developer Program membership is **free tier** (not paid). Provisioning profiles expire every 7 days. See Section 6 for details.
 - **Verification:** Always run `./verify.sh` to trigger the cross-platform test suite (Local Unit Tests + Mac Mini iOS E2E).
