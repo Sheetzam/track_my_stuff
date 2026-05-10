@@ -62,9 +62,11 @@ if [[ -z "$SIMULATOR_DEVICE_ID" ]]; then
 fi
 
 echo "Building for simulator ($SIMULATOR_NAME)..."
-# Flutter's xcconfig chain always includes base Pods-Runner.debug.xcconfig which
-# links ML Kit. Patch it to remove ML Kit refs for the simulator build.
-ruby "$PROJECT_DIR/ios/patch_dev_xcconfigs.rb"
+# Disable ML Kit for simulator build (no arm64-simulator slice available).
+# This is the only reliable approach — Flutter's plugin system requires the
+# package to be absent from pubspec for the native code to be excluded.
+sed -i '' 's/^  google_mlkit_object_detection:/  # google_mlkit_object_detection:/' pubspec.yaml
+flutter pub get
 flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false
 flutter install -d "$SIMULATOR_DEVICE_ID" --flavor dev
 
@@ -86,10 +88,12 @@ echo "==========================================="
 # Confirm device is connected
 if ! flutter devices 2>/dev/null | grep -q "$DEVICE_UDID"; then
   echo "⚠️  Physical iPhone ($DEVICE_UDID) not connected — skipping Phase 2."
+  # Still restore ML Kit in pubspec for clean state
+  sed -i '' 's/^  # google_mlkit_object_detection:/  google_mlkit_object_detection:/' pubspec.yaml
 else
-  # Restore ML Kit linker refs by re-running pod install (undoes simulator patches)
-  echo "Restoring Pods for device build (re-running pod install)..."
-  cd "$PROJECT_DIR/ios" && pod install && cd "$PROJECT_DIR"
+  # Re-enable ML Kit for physical device build
+  sed -i '' 's/^  # google_mlkit_object_detection:/  google_mlkit_object_detection:/' pubspec.yaml
+  flutter pub get
 
   echo "Building release for physical device..."
   flutter build ios --release --flavor prod
