@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Large model files (use placeholders instead)
+*.gguf
+!*_placeholder.gguf
