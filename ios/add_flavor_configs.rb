@@ -6,6 +6,9 @@
 # Each flavor config duplicates the settings of its base config (Debug, Release, Profile).
 # This is required for `flutter build ios --flavor <name>` to work.
 #
+# After running this script, run `pod install` to generate Pods xcconfigs,
+# then run `fix_flavor_xcconfigs.rb` to wire up the Pods xcconfig references.
+#
 # Usage: ruby ios/add_flavor_configs.rb
 # Requires: gem install xcodeproj
 
@@ -20,7 +23,7 @@ base_configs = ['Debug', 'Release', 'Profile']
 # Check if flavor configs already exist
 existing_names = project.build_configurations.map(&:name)
 if existing_names.include?('Debug-dev')
-  puts "Flavor configurations already exist. Skipping."
+  puts "Flavor configurations already exist. Skipping creation."
   exit 0
 end
 
@@ -44,7 +47,6 @@ flavors.each do |flavor|
       base_target_config = target.build_configurations.find { |c| c.name == base_name }
       next unless base_target_config
 
-      # add_build_configuration on target
       new_target_config = target.add_build_configuration(new_name, base_target_config.type)
       new_target_config.build_settings = base_target_config.build_settings.dup
 
@@ -58,4 +60,6 @@ end
 
 project.save
 puts "\nDone! Flavor configurations added to #{project_path}"
-puts "Run 'pod install' in the ios/ directory to regenerate Pods configs."
+puts "\nNext steps:"
+puts "  1. Run 'pod install' in the ios/ directory"
+puts "  2. Run 'ruby ios/fix_flavor_xcconfigs.rb' to wire up Pods xcconfigs"
