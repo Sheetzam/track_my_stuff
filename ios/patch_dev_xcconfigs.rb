@@ -28,29 +28,17 @@ mlkit_frameworks = [
   'google_mlkit_object_detection',
 ]
 
-# Patterns to remove from xcconfig files
+# Remove ML Kit linker references from xcconfig content.
+# We KEEP framework search paths and header search paths so the compiler
+# can still find ML Kit headers (needed by GeneratedPluginRegistrant.m).
+# We only remove the actual linker flags (-framework "...") from OTHER_LDFLAGS.
 def remove_mlkit_refs(content, frameworks)
-  # Remove -framework "MLKit..." entries from OTHER_LDFLAGS
+  # Remove -framework "MLKit..." entries from OTHER_LDFLAGS line only
   frameworks.each do |fw|
     content.gsub!(/-framework\s+"#{Regexp.escape(fw)}"\s*/, '')
   end
 
-  # Remove framework search paths pointing to ML Kit pods
-  frameworks.each do |fw|
-    # "${PODS_CONFIGURATION_BUILD_DIR}/google_mlkit_commons"
-    content.gsub!(/"\$\{PODS_CONFIGURATION_BUILD_DIR\}\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
-    # "${PODS_ROOT}/MLKitCommon/Frameworks"
-    content.gsub!(/"\$\{PODS_ROOT\}\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
-    # "-F${PODS_CONFIGURATION_BUILD_DIR}/google_mlkit_commons"
-    content.gsub!(/"-F\$\{PODS_CONFIGURATION_BUILD_DIR\}\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
-    # "${PODS_ROOT}/Headers/Public/GoogleMLKit"
-    content.gsub!(/"\$\{PODS_ROOT\}\/Headers\/Public\/#{Regexp.escape(fw)}[^"]*"\s*/, '')
-  end
-
-  # Also remove the GoogleMLKit source path
-  content.gsub!(/\$\{PODS_ROOT\}\/GoogleMLKit[^\s]*\s*/, '')
-
-  # Clean up double spaces
+  # Clean up double spaces in OTHER_LDFLAGS
   content.gsub!(/  +/, ' ')
   content
 end
