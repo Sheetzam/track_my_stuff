@@ -4,7 +4,7 @@ import 'package:track_my_stuff/core/interfaces/embedding_engine_interface.dart';
 import 'package:track_my_stuff/core/interfaces/object_detection_interface.dart';
 import 'package:track_my_stuff/core/interfaces/vision_llm_interface.dart';
 import 'package:track_my_stuff/features/items/data/ml/local_vision_engine.dart';
-import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector.dart';
+import 'package:track_my_stuff/features/items/data/ml/mock_object_detector.dart';
 import 'package:track_my_stuff/features/items/data/ml/tflite_embedding_engine.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
 
@@ -19,13 +19,13 @@ void main() {
       expect(engine, isA<TfliteEmbeddingEngine>());
     });
 
-    test('objectDetectionEngineProvider returns a MlKitObjectDetector', () {
+    test('objectDetectionEngineProvider returns a MockObjectDetector', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
       final engine = container.read(objectDetectionEngineProvider);
       expect(engine, isA<IObjectDetectionEngine>());
-      expect(engine, isA<MlKitObjectDetector>());
+      expect(engine, isA<MockObjectDetector>());
     });
 
     test('visionLLMEngineProvider returns a LocalVisionEngine', () {

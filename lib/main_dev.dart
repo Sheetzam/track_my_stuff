@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:track_my_stuff/core/theme/app_theme.dart';
-import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector.dart';
 import 'package:track_my_stuff/features/items/data/objectbox/objectbox_repository.dart';
 import 'package:track_my_stuff/features/items/ui/home_screen.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
 
+/// Dev entry point for iOS Simulator builds.
+/// Uses MockObjectDetector (the provider default) since ML Kit
+/// is unavailable on the simulator.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -16,7 +18,7 @@ void main() async {
     ProviderScope(
       overrides: [
         localDatabaseProvider.overrideWithValue(objectBoxRepo),
-        objectDetectionEngineProvider.overrideWithValue(MlKitObjectDetector()),
+        // objectDetectionEngineProvider defaults to MockObjectDetector
       ],
       child: const MyApp(),
     ),

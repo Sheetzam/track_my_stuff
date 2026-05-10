@@ -5,7 +5,7 @@ import 'package:track_my_stuff/core/interfaces/local_database_interface.dart';
 import 'package:track_my_stuff/core/interfaces/object_detection_interface.dart';
 import 'package:track_my_stuff/core/interfaces/vision_llm_interface.dart';
 import 'package:track_my_stuff/features/items/data/ml/local_vision_engine.dart';
-import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector.dart';
+import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector_stub.dart';
 import 'package:track_my_stuff/features/items/data/ml/mock_object_detector.dart';
 import 'package:track_my_stuff/features/items/data/ml/tflite_embedding_engine.dart';
 import 'package:track_my_stuff/features/items/domain/item.dart';
@@ -29,10 +29,10 @@ IEmbeddingEngine embeddingEngine(Ref ref) => TfliteEmbeddingEngine();
 const _useMlKit = bool.fromEnvironment('USE_MLKIT', defaultValue: true);
 
 /// Provider for the object detection interface.
-/// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
+/// Defaults to MockObjectDetector. On builds where ML Kit is available,
+/// main.dart overrides this with the real MlKitObjectDetector.
 @riverpod
-IObjectDetectionEngine objectDetectionEngine(Ref ref) =>
-    _useMlKit ? MlKitObjectDetector() : MockObjectDetector();
+IObjectDetectionEngine objectDetectionEngine(Ref ref) => MockObjectDetector();
 
 /// Provider for the vision LLM interface.
 @riverpod

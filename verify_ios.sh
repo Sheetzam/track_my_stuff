@@ -63,11 +63,10 @@ fi
 
 echo "Building for simulator ($SIMULATOR_NAME)..."
 # Disable ML Kit for simulator build (no arm64-simulator slice available).
-# This is the only reliable approach — Flutter's plugin system requires the
-# package to be absent from pubspec for the native code to be excluded.
+# Use main_dev.dart entry point which doesn't import ML Kit.
 sed -i '' 's/^  google_mlkit_object_detection:/  # google_mlkit_object_detection:/' pubspec.yaml
 flutter pub get
-flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false
+flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false -t lib/main_dev.dart
 flutter install -d "$SIMULATOR_DEVICE_ID" --flavor dev
 
 echo "🎭 Running Maestro E2E on Simulator..."

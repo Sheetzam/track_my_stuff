@@ -109,13 +109,15 @@ final class EmbeddingEngineProvider
 String _$embeddingEngineHash() => r'0743a321bc1e2751fc1aa84eaa21933150a1532e';
 
 /// Provider for the object detection interface.
-/// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
+/// Defaults to MockObjectDetector. On builds where ML Kit is available,
+/// main.dart overrides this with the real MlKitObjectDetector.
 
 @ProviderFor(objectDetectionEngine)
 final objectDetectionEngineProvider = ObjectDetectionEngineProvider._();
 
 /// Provider for the object detection interface.
-/// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
+/// Defaults to MockObjectDetector. On builds where ML Kit is available,
+/// main.dart overrides this with the real MlKitObjectDetector.
 
 final class ObjectDetectionEngineProvider
     extends
@@ -126,7 +128,8 @@ final class ObjectDetectionEngineProvider
         >
     with $Provider<IObjectDetectionEngine> {
   /// Provider for the object detection interface.
-  /// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
+  /// Defaults to MockObjectDetector. On builds where ML Kit is available,
+  /// main.dart overrides this with the real MlKitObjectDetector.
   ObjectDetectionEngineProvider._()
     : super(
         from: null,
@@ -162,7 +165,7 @@ final class ObjectDetectionEngineProvider
 }
 
 String _$objectDetectionEngineHash() =>
-    r'63b600900126ba43405e50ed0cd82187fe1ca701';
+    r'2e61383664d9b7118506a88885880482a5f9c761';
 
 /// Provider for the vision LLM interface.
 
