@@ -2,11 +2,11 @@
 
 - [x] **#1 Rename `presentation` → `ui`:** `lib/features/items/presentation` and `test/features/items/presentation` should be `ui` to match the AGENT_RULES feature-first architecture convention.
 - [x] **#2 Lazy engine initialization:** `TfliteEmbeddingEngine` and `LocalVisionEngine` are instantiated eagerly in `main.dart`. Move initialization to first use (e.g., inside their Riverpod providers).
-- [ ] **#3 Real vision model:** ~~Replace with a real Moondream2 model~~ — using Google ML Kit instead (on-device, no large model download). ML Kit enabled on Android and physical iOS; iOS Simulator uses mock. `LocalVisionEngine` / Moondream2 deferred.
+- [x] **#3 Real vision model:** ~~Replace with a real Moondream2 model~~ — using Google ML Kit instead (on-device, no large model download). ML Kit enabled on Android and physical iOS; iOS Simulator uses mock. `LocalVisionEngine` / Moondream2 deferred.
   - [x] iPhone connected, trusted, provisioning profile generated
   - [x] Keychain unlock automated (`~/.keychain_pass`), Rosetta installed, git identity set on Mac Mini
   - [x] `verify_ios.sh` and `verify.sh` now use `--flavor` (see #5)
-  - [ ] **NEXT: Run full `./verify.sh` end-to-end (Android E2E + iOS E2E via Mac Mini)**
+  - [x] **Full `./verify.sh` end-to-end (Android E2E + iOS E2E via Mac Mini) ✅**
 - [x] **#4 ML engine unit tests:** No tests exist for `TfliteEmbeddingEngine`, `LocalVisionEngine`, or `MlKitObjectDetector`. Write them once the implementations are complete.
 - [x] **#5 Flutter build flavors for ML Kit:** Replaces fragile `sed` pubspec toggling.
   - [x] `pubspec.yaml`: `google_mlkit_object_detection` permanently enabled (no more commenting)
@@ -30,4 +30,14 @@
 - [x] **#8 Search result navigation:** `ItemDetailScreen` shows the matched item (image, name, tags) and its parent container (photo, name, description). Tapping a search result navigates there.
 - [x] **#9 Container detail/browse screen:** `ContainerDetailScreen` shows container photo, description, item count badge, and a list of all items. Tapping an item goes to `ItemDetailScreen`. FAB to add more items.
 - [x] **#10 Proper tokenizer for TFLite embeddings:** Implemented `WordPieceTokenizer` with full BERT-compatible algorithm + 30,522-token vocabulary from all-MiniLM-L6-v2.
+
+## Repository Maintenance Completed
+- [x] **Large model file cleanup:** Removed 868MB `vision_mmproj.gguf` from git history, added to `.gitignore`, created placeholder file. Repository now pushes successfully to GitHub.
+
+## Next Priorities
+- [ ] **#11 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.
+- [ ] **#12 Bulk operations:** Add ability to move multiple items between containers, bulk tagging, batch delete.
+- [ ] **#13 Data export/import:** JSON export for backup, CSV export for spreadsheet analysis, import from other inventory apps.
+- [ ] **#14 Performance optimization:** Lazy loading for large inventories, image caching improvements, database query optimization.
+- [ ] **#15 UI/UX improvements:** Dark mode, accessibility enhancements, better onboarding flow, tutorial screens.
 
