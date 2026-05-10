@@ -1,9 +1,12 @@
 appId: ${APP_ID}
 ---
 - launchApp
-- assertVisible: "New Container"
+- extendedWaitUntil:
+    visible:
+      id: "add_container_fab"
+    timeout: 10000
 - tapOn:
-    text: "New Container"
+    id: "add_container_fab"
     retryTapIfNoChange: true
 - assertVisible:
     id: "image_picker_button"

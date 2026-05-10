@@ -74,16 +74,18 @@ class HomeScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          await Navigator.push<void>(
-            context,
-            MaterialPageRoute<void>(builder: (context) => const AddContainerScreen()),
-          );
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('New Container', style: TextStyle(fontWeight: FontWeight.bold)),
-        tooltip: 'add_container_fab',
+      floatingActionButton: Semantics(
+        identifier: 'add_container_fab',
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            await Navigator.push<void>(
+              context,
+              MaterialPageRoute<void>(builder: (context) => const AddContainerScreen()),
+            );
+          },
+          icon: const Icon(Icons.add),
+          label: const Text('New Container', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
       ),
     );
   }

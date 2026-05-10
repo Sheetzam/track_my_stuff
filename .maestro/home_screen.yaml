@@ -1,8 +1,11 @@
 appId: ${APP_ID}
 ---
 - launchApp
-- assertVisible:
-    id: "home_screen_title"
+- extendedWaitUntil:
+    visible:
+      id: "home_screen_title"
+    timeout: 10000
 - assertVisible:
     id: "empty_state_text"
-- assertVisible: "New Container"
+- assertVisible:
+    id: "add_container_fab"
