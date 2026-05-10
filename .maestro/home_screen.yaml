@@ -8,4 +8,4 @@ appId: ${APP_ID}
 - assertVisible:
     id: "empty_state_text"
 - assertVisible:
-    id: "add_container_fab"
+    text: ".*New Container.*"
