@@ -109,11 +109,13 @@ final class EmbeddingEngineProvider
 String _$embeddingEngineHash() => r'0743a321bc1e2751fc1aa84eaa21933150a1532e';
 
 /// Provider for the object detection interface.
+/// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
 
 @ProviderFor(objectDetectionEngine)
 final objectDetectionEngineProvider = ObjectDetectionEngineProvider._();
 
 /// Provider for the object detection interface.
+/// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
 
 final class ObjectDetectionEngineProvider
     extends
@@ -124,6 +126,7 @@ final class ObjectDetectionEngineProvider
         >
     with $Provider<IObjectDetectionEngine> {
   /// Provider for the object detection interface.
+  /// Uses ML Kit on Android/physical iOS, mock on iOS Simulator (dev flavor).
   ObjectDetectionEngineProvider._()
     : super(
         from: null,
@@ -159,7 +162,7 @@ final class ObjectDetectionEngineProvider
 }
 
 String _$objectDetectionEngineHash() =>
-    r'471e2a2402c7fffb0e04e6b241f1aa6636118a47';
+    r'63b600900126ba43405e50ed0cd82187fe1ca701';
 
 /// Provider for the vision LLM interface.
 

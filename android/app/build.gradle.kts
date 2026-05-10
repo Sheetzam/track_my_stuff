@@ -20,14 +20,24 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.track_my_stuff"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    flavorDimensions += "mlkit"
+    productFlavors {
+        create("dev") {
+            dimension = "mlkit"
+            // Dev flavor: used for iOS Simulator builds where ML Kit is unavailable.
+            // On Android, ML Kit works in both flavors.
+        }
+        create("prod") {
+            dimension = "mlkit"
+            // Prod flavor: used for physical device builds (Android + iOS).
+        }
     }
 
     buildTypes {

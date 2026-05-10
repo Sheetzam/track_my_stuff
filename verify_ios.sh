@@ -3,8 +3,8 @@
 # iOS verification script — runs on the Mac Mini (invoked via SSH from Ubuntu).
 #
 # Two-phase verification:
-#   Phase 1 — iOS Simulator: Maestro E2E (mock ML Kit path)
-#   Phase 2 — Physical iPhone: build release, install, Maestro E2E (real ML Kit path)
+#   Phase 1 — iOS Simulator: flutter build ios --simulator --flavor dev (mock ML Kit)
+#   Phase 2 — Physical iPhone: flutter build ios --flavor prod (real ML Kit)
 #
 # Requires:
 #   ~/.keychain_pass  — Mac login password for codesign (chmod 600, not in git)
@@ -38,16 +38,13 @@ fi
 # ==========================================
 echo ""
 echo "==========================================="
-echo "📱 Phase 1: iOS Simulator E2E"
+echo "📱 Phase 1: iOS Simulator E2E (--flavor dev)"
 echo "==========================================="
 
 echo "Booting $SIMULATOR_NAME..."
 xcrun simctl boot "$SIMULATOR_NAME" 2>/dev/null || true
 open -a Simulator
 xcrun simctl bootstatus "$SIMULATOR_NAME" -b
-
-echo "Resolving dependencies..."
-flutter pub get
 
 SIMULATOR_DEVICE_ID=$(xcrun simctl list devices booted --json | python3 -c "
 import json, sys
@@ -65,11 +62,8 @@ if [[ -z "$SIMULATOR_DEVICE_ID" ]]; then
 fi
 
 echo "Building for simulator ($SIMULATOR_NAME)..."
-# ML Kit must be disabled for simulator builds (no arm64-simulator slice).
-sed -i '' 's/^  google_mlkit_object_detection/  # google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
-flutter pub get
-flutter build ios --simulator --debug
-flutter install -d "$SIMULATOR_DEVICE_ID"
+flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false
+flutter install -d "$SIMULATOR_DEVICE_ID" --flavor dev
 
 echo "🎭 Running Maestro E2E on Simulator..."
 maestro test --env APP_ID="$SIMULATOR_APP_ID" .maestro/
@@ -83,7 +77,7 @@ xcrun simctl shutdown "$SIMULATOR_NAME" 2>/dev/null || true
 # ==========================================
 echo ""
 echo "==========================================="
-echo "📱 Phase 2: Physical iPhone E2E"
+echo "📱 Phase 2: Physical iPhone E2E (--flavor prod)"
 echo "==========================================="
 
 # Confirm device is connected
@@ -91,23 +85,14 @@ if ! flutter devices 2>/dev/null | grep -q "$DEVICE_UDID"; then
   echo "⚠️  Physical iPhone ($DEVICE_UDID) not connected — skipping Phase 2."
 else
   echo "Building release for physical device..."
-  # Re-enable ML Kit for device builds (real hardware supports it).
-  sed -i '' 's/^  # google_mlkit_object_detection/  google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
-  flutter pub get
-  flutter build ios --release
+  flutter build ios --release --flavor prod
 
   echo "Installing on iPhone..."
-  flutter install -d "$DEVICE_UDID" --release
+  flutter install -d "$DEVICE_UDID" --release --flavor prod
 
   echo "🎭 Running Maestro E2E on iPhone..."
   maestro test --env APP_ID="$DEVICE_APP_ID" .maestro/
-
-  echo "🧹 Stopping app on device..."
-  # Maestro handles app lifecycle; nothing to clean up
 fi
 
 echo ""
 echo "✅ iOS verification passed!"
-
-# Restore pubspec.yaml to simulator-compatible state (ML Kit commented out)
-sed -i '' 's/^  google_mlkit_object_detection/  # google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true

@@ -41,11 +41,8 @@ echo "      (Start with: ./start_android_emulator.sh)"
 
 echo ""
 echo "🔨 Building and installing Flutter app on Android Emulator..."
-# Re-enable ML Kit for Android (supported on all Android devices).
-sed -i 's/^  # google_mlkit_object_detection/  google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
-flutter pub get
-flutter build apk --debug
-flutter install -d emulator --debug
+flutter build apk --debug --flavor prod
+flutter install -d emulator --debug --flavor prod
 
 echo ""
 echo "🎭 Running Maestro flows individually with isolation..."
@@ -59,8 +56,6 @@ echo "==========================================="
 echo "🧹 Android Cleanup..."
 echo "==========================================="
 adb shell am force-stop com.example.track_my_stuff 2>/dev/null || true
-# Restore pubspec to simulator-compatible state before iOS push
-sed -i 's/^  google_mlkit_object_detection/  # google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
 
 if $LOCAL_ONLY; then
   echo "==========================================="

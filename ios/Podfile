@@ -4,10 +4,14 @@ platform :ios, '15.5'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# Flutter flavors create build configurations named "Debug-<flavor>", "Release-<flavor>", etc.
 project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
+  'Debug-dev' => :debug,
+  'Debug-prod' => :debug,
+  'Profile-dev' => :release,
+  'Profile-prod' => :release,
+  'Release-dev' => :release,
+  'Release-prod' => :release,
 }
 
 def flutter_root
@@ -37,13 +41,26 @@ target 'Runner' do
 end
 
 post_install do |installer|
+  # ML Kit pods that lack arm64-simulator slices.
+  # These are excluded from 'dev' flavor configs (simulator builds).
+  mlkit_pod_prefixes = ['GoogleMLKit', 'MLKit', 'google_mlkit', 'Google-Mobile-Vision']
+
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    is_mlkit_target = mlkit_pod_prefixes.any? { |prefix| target.name.start_with?(prefix) }
+
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.5'
+
+      # Exclude ML Kit targets from dev (simulator) builds by setting
+      # EXCLUDED_ARCHS to arm64 + x86_64 (effectively skipping compilation).
+      if is_mlkit_target && config.name.downcase.include?('-dev')
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 x86_64 i386'
+      end
     end
   end
-  
+
   # Apply the same settings to the main Runner project targets
   installer.aggregate_targets.each do |target|
     target.user_project.targets.each do |user_target|
