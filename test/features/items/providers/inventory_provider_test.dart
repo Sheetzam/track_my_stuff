@@ -32,7 +32,7 @@ class FakeLocalDatabase implements ILocalDatabase {
   }
 
   @override
-  Future<void> saveItem(Item item) async {
+  Future<void> saveItem(Item item, {List<double>? embedding}) async {
     _items.add(item);
   }
 

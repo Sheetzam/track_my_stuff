@@ -15,7 +15,7 @@ abstract class ILocalDatabase {
   Future<void> deleteContainer(String id);
   
   // --- Items ---
-  Future<void> saveItem(Item item);
+  Future<void> saveItem(Item item, {List<double>? embedding});
   Future<List<Item>> getItemsInContainer(String containerId);
   Future<Item?> getItem(String id);
   Future<void> deleteItem(String id);

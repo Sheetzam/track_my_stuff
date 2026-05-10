@@ -62,13 +62,14 @@ class ObjectBoxRepository implements ILocalDatabase {
   }
 
   @override
-  Future<void> saveItem(Item item) async {
+  Future<void> saveItem(Item item, {List<double>? embedding}) async {
     final query = _itemBox.query(ObxItem_.domainId.equals(item.id)).build();
     final existing = query.findFirst();
     query.close();
 
-    // Preserve the embedding if it already exists, as the pure domain model doesn't hold the embedding vector yet
-    final obxItem = ObxItem.fromDomain(item, embedding: existing?.embedding);
+    // Use provided embedding, fall back to existing, or null
+    final effectiveEmbedding = embedding ?? existing?.embedding;
+    final obxItem = ObxItem.fromDomain(item, embedding: effectiveEmbedding);
     if (existing != null) {
       obxItem.obxId = existing.obxId;
     }

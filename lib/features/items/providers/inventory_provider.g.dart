@@ -245,7 +245,7 @@ final class InventoryProvider extends $AsyncNotifierProvider<Inventory, void> {
   Inventory create() => Inventory();
 }
 
-String _$inventoryHash() => r'f3b029194599aafa80694ca58c2e47fd7775e7f5';
+String _$inventoryHash() => r'891bc7dcc0b84b024eef138730fcbd8f05b1d164';
 
 /// The main controller for managing inventory items.
 

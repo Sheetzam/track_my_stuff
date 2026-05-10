@@ -81,9 +81,9 @@ class MockILocalDatabase extends _i1.Mock implements _i2.ILocalDatabase {
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> saveItem(_i5.Item? item) =>
+  _i3.Future<void> saveItem(_i5.Item? item, {List<double>? embedding}) =>
       (super.noSuchMethod(
-            Invocation.method(#saveItem, [item]),
+            Invocation.method(#saveItem, [item], {#embedding: embedding}),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

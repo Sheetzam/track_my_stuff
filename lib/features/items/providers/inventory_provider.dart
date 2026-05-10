@@ -58,7 +58,13 @@ class Inventory extends _$Inventory {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final db = ref.read(localDatabaseProvider);
-      await db.saveItem(item);
+      final embeddingEng = ref.read(embeddingEngineProvider);
+      
+      // Generate semantic embedding from item name + description for vector search
+      final searchText = '${item.name} ${item.description}'.trim();
+      final embedding = await embeddingEng.generateEmbedding(searchText);
+      
+      await db.saveItem(item, embedding: embedding);
     });
   }
 

@@ -38,5 +38,6 @@ flutter:
 
   assets:
     - assets/models/minilm_l6_v2.tflite
+    - assets/models/vocab.txt
     - assets/models/vision_model.gguf
     - assets/models/vision_mmproj.gguf
