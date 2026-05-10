@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.track_my_stuff"
+    namespace = "com.sheetzam.track_my_stuff"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.track_my_stuff"
+        applicationId = "com.sheetzam.track_my_stuff"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

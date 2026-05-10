@@ -48,14 +48,14 @@ echo ""
 echo "🎭 Running Maestro flows individually with isolation..."
 for flow in .maestro/*.yaml; do
   echo "🏃 Running $flow..."
-  adb shell pm clear com.example.track_my_stuff || true
-  maestro test --env APP_ID=com.example.track_my_stuff "$flow"
+  adb shell pm clear com.sheetzam.track_my_stuff || true
+  maestro test --env APP_ID=com.sheetzam.track_my_stuff "$flow"
 done
 
 echo "==========================================="
 echo "🧹 Android Cleanup..."
 echo "==========================================="
-adb shell am force-stop com.example.track_my_stuff 2>/dev/null || true
+adb shell am force-stop com.sheetzam.track_my_stuff 2>/dev/null || true
 
 if $LOCAL_ONLY; then
   echo "==========================================="

@@ -1,4 +1,4 @@
-package com.example.track_my_stuff
+package com.sheetzam.track_my_stuff
 
 import io.flutter.embedding.android.FlutterActivity
 

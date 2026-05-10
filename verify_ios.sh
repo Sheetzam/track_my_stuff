@@ -14,8 +14,8 @@ set -e
 export PATH="$HOME/dev/flutter/bin:$HOME/.maestro/bin:$HOME/.maestro-runner/bin:/opt/homebrew/bin:$PATH"
 
 PROJECT_DIR="$HOME/dev/track_my_stuff"
-SIMULATOR_APP_ID="com.example.trackMyStuff"
-DEVICE_APP_ID="com.example.trackMyStuff"
+SIMULATOR_APP_ID="com.sheetzam.trackMyStuff"
+DEVICE_APP_ID="com.sheetzam.trackMyStuff"
 SIMULATOR_NAME="iPhone 17 Pro"
 DEVICE_UDID="c436e44ff43f1f713f842da9f106d5ae8658efb0"
 

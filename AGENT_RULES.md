@@ -89,7 +89,7 @@ The project currently faces specific architectural limitations regarding Google 
   maestro-runner --platform ios \
     --device c436e44ff43f1f713f842da9f106d5ae8658efb0 \
     --team-id 84H8T5TLQ2 \
-    -e APP_ID=com.example.trackMyStuff \
+    -e APP_ID=com.sheetzam.trackMyStuff \
     test .maestro/
   ```
 
