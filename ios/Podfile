@@ -41,27 +41,27 @@ target 'Runner' do
 end
 
 post_install do |installer|
-  # ML Kit pods that lack arm64-simulator slices.
-  # These are excluded from 'dev' flavor configs (simulator builds).
-  mlkit_pod_prefixes = ['GoogleMLKit', 'MLKit', 'google_mlkit', 'Google-Mobile-Vision']
+  # ML Kit pod identifiers that lack arm64-simulator slices.
+  mlkit_identifiers = ['GoogleMLKit', 'MLKit', 'google_mlkit']
 
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
 
-    is_mlkit_target = mlkit_pod_prefixes.any? { |prefix| target.name.start_with?(prefix) }
+    is_mlkit = mlkit_identifiers.any? { |id| target.name.include?(id) }
 
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.5'
 
-      # Exclude ML Kit targets from dev (simulator) builds by setting
-      # EXCLUDED_ARCHS to arm64 + x86_64 (effectively skipping compilation).
-      if is_mlkit_target && config.name.downcase.include?('-dev')
-        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 x86_64 i386'
+      # For dev (simulator) builds, skip compiling ML Kit pods entirely
+      # by excluding all architectures.
+      if is_mlkit && config.name.downcase.include?('-dev')
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 x86_64'
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphoneos*]'] = 'arm64'
       end
     end
   end
 
-  # Apply the same settings to the main Runner project targets
+  # Apply deployment target to Runner project targets
   installer.aggregate_targets.each do |target|
     target.user_project.targets.each do |user_target|
       user_target.build_configurations.each do |config|
@@ -69,5 +69,23 @@ post_install do |installer|
       end
     end
     target.user_project.save
+  end
+
+  # Patch the Pods-Runner xcconfig files for dev configurations to remove
+  # ML Kit framework linker references. This prevents "framework not found"
+  # errors when ML Kit pods are excluded from simulator builds.
+  pods_support = File.join(__dir__, 'Pods', 'Target Support Files')
+  ['Pods-Runner', 'Pods-RunnerTests'].each do |pod_target|
+    target_dir = File.join(pods_support, pod_target)
+    next unless File.directory?(target_dir)
+
+    Dir.glob(File.join(target_dir, '*-dev.xcconfig')).each do |xcconfig_path|
+      content = File.read(xcconfig_path)
+      # Remove -framework "GoogleMLKit..." / -framework "MLKit..." entries
+      content.gsub!(/-framework\s+"(GoogleMLKit|MLKit|google_mlkit)[^"]*"\s*/, '')
+      # Remove -l"google_mlkit..." linker flags
+      content.gsub!(/-l"(google_mlkit)[^"]*"\s*/, '')
+      File.write(xcconfig_path, content)
+    end
   end
 end
