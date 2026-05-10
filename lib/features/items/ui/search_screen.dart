@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:track_my_stuff/features/items/domain/item.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
+import 'package:track_my_stuff/features/items/ui/item_detail_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -75,7 +76,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         subtitle: Text(item.description, style: const TextStyle(color: Colors.white70)),
                         trailing: const Icon(Icons.chevron_right, color: Colors.white24),
                         onTap: () {
-                          // TODO(sheetzam): Navigate to container/item detail
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ItemDetailScreen(item: item),
+                            ),
+                          );
                         },
                       ),
                     );
