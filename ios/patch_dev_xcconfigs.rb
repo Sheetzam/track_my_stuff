@@ -63,10 +63,11 @@ patched_count = 0
 
   Dir.glob(File.join(target_dir, '*-dev.xcconfig')).each do |xcconfig_path|
     content = File.read(xcconfig_path)
-    patched = remove_mlkit_refs(content, mlkit_frameworks)
+    original = content.dup
+    remove_mlkit_refs(content, mlkit_frameworks)
 
-    if patched != content
-      File.write(xcconfig_path, patched)
+    if content != original
+      File.write(xcconfig_path, content)
       puts "Patched: #{Pathname.new(xcconfig_path).relative_path_from(ios_dir)}"
       patched_count += 1
     else
