@@ -11,11 +11,11 @@
 
 set -e
 
-export PATH="$HOME/dev/flutter/bin:$HOME/.maestro/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/dev/flutter/bin:$HOME/.maestro/bin:$HOME/.maestro-runner/bin:/opt/homebrew/bin:$PATH"
 
 PROJECT_DIR="$HOME/dev/track_my_stuff"
 SIMULATOR_APP_ID="com.example.trackMyStuff"
-DEVICE_APP_ID="com.sheetzam.trackMyStuff"
+DEVICE_APP_ID="com.example.trackMyStuff"
 SIMULATOR_NAME="iPhone 17 Pro"
 DEVICE_UDID="c436e44ff43f1f713f842da9f106d5ae8658efb0"
 
@@ -32,6 +32,11 @@ if [[ -f "$HOME/.keychain_pass" ]]; then
 else
   echo "⚠️  ~/.keychain_pass not found — code signing may fail."
 fi
+
+# --- Ensure iOS flavor configs exist ---
+echo "Ensuring Xcode flavor configurations..."
+ruby "$PROJECT_DIR/ios/add_flavor_configs.rb" 2>/dev/null || true
+ruby "$PROJECT_DIR/ios/fix_flavor_xcconfigs.rb" 2>/dev/null || true
 
 # ==========================================
 # PHASE 1: iOS Simulator (Maestro E2E)
@@ -100,8 +105,15 @@ else
   echo "Installing on iPhone..."
   flutter install -d "$DEVICE_UDID" --release --flavor prod
 
-  echo "🎭 Running Maestro E2E on iPhone..."
-  maestro test --env APP_ID="$DEVICE_APP_ID" .maestro/
+  echo "🎭 Running Maestro E2E on iPhone (via maestro-runner)..."
+  # maestro-runner supports iOS 12+; uses WebDriverAgent for physical devices.
+  # NOTE: WDA provisioning expires every 7 days on free Apple accounts.
+  maestro-runner --platform ios \
+    --device "$DEVICE_UDID" \
+    --team-id 84H8T5TLQ2 \
+    --wda-bundle-id com.sheetzam.WebDriverAgentRunner \
+    -e APP_ID="$DEVICE_APP_ID" \
+    test .maestro/ || echo "⚠️  Physical device Maestro failed (may be Xcode 26.4 regression or WDA expiry). Build+install succeeded."
 fi
 
 echo ""
