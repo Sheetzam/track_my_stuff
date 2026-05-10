@@ -41,20 +41,6 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.5'
-
-      # Exclude ML Kit pods from simulator builds.
-      # ML Kit does not provide an arm64-simulator slice, which is required
-      # for iOS 26+ simulators on Apple Silicon. The app uses a mock
-      # implementation on simulator (see MlKitObjectDetector._isIosSimulator).
-      ml_kit_pods = %w[
-        GoogleMLKit MLImage MLKitCommon MLKitVision MLKitVisionKit
-        MLKitObjectDetection MLKitObjectDetectionCommon
-        MLKitObjectDetectionCustom MLKitImageLabelingCommon
-        google_mlkit_object_detection google_mlkit_commons
-      ]
-      if ml_kit_pods.include?(target.name) && config.name != 'Release'
-        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
-      end
     end
   end
   

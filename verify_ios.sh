@@ -65,6 +65,9 @@ if [[ -z "$SIMULATOR_DEVICE_ID" ]]; then
 fi
 
 echo "Building for simulator ($SIMULATOR_NAME)..."
+# ML Kit must be disabled for simulator builds (no arm64-simulator slice).
+sed -i '' 's/^  google_mlkit_object_detection/  # google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
+flutter pub get
 flutter build ios --simulator --debug
 flutter install -d "$SIMULATOR_DEVICE_ID"
 
@@ -88,6 +91,9 @@ if ! flutter devices 2>/dev/null | grep -q "$DEVICE_UDID"; then
   echo "⚠️  Physical iPhone ($DEVICE_UDID) not connected — skipping Phase 2."
 else
   echo "Building release for physical device..."
+  # Re-enable ML Kit for device builds (real hardware supports it).
+  sed -i '' 's/^  # google_mlkit_object_detection/  google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
+  flutter pub get
   flutter build ios --release
 
   echo "Installing on iPhone..."
@@ -102,3 +108,6 @@ fi
 
 echo ""
 echo "✅ iOS verification passed!"
+
+# Restore pubspec.yaml to simulator-compatible state (ML Kit commented out)
+sed -i '' 's/^  google_mlkit_object_detection/  # google_mlkit_object_detection/' pubspec.yaml 2>/dev/null || true
