@@ -18,14 +18,17 @@ class HomeScreen extends ConsumerWidget {
           child: const Text('TrackMyStuff', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SearchScreen()),
-              );
-            },
+          Semantics(
+            identifier: 'home_search_button',
+            child: IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SearchScreen()),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -42,29 +45,32 @@ class HomeScreen extends ConsumerWidget {
               itemCount: containers.length,
               itemBuilder: (context, index) {
                 final container = containers[index];
-                return Card(
-                  color: const Color(0xFF1E1E2C),
-                  margin: const EdgeInsets.only(bottom: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    leading: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                return Semantics(
+                  identifier: 'home_container_tile_$index',
+                  child: Card(
+                    color: const Color(0xFF1E1E2C),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(16),
+                      leading: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(Icons.inventory_2_outlined, color: Theme.of(context).colorScheme.primary),
                       ),
-                      child: Icon(Icons.inventory_2_outlined, color: Theme.of(context).colorScheme.primary),
+                      title: Text(container.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                      subtitle: Text(container.description, style: const TextStyle(color: Colors.white70)),
+                      trailing: const Icon(Icons.chevron_right, color: Colors.white24),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ContainerDetailScreen(container: container)),
+                        );
+                      },
                     ),
-                    title: Text(container.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-                    subtitle: Text(container.description, style: const TextStyle(color: Colors.white70)),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.white24),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ContainerDetailScreen(container: container)),
-                      );
-                    },
                   ),
                 );
               },

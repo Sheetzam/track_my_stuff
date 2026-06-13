@@ -83,7 +83,7 @@ class ContainerDetailScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildItemTile(context, items[index]),
+                      (context, index) => _buildItemTile(context, items[index], index),
                       childCount: items.length,
                     ),
                   ),
@@ -185,14 +185,16 @@ class ContainerDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildItemTile(BuildContext context, Item item) {
+  Widget _buildItemTile(BuildContext context, Item item, int index) {
     final file = File(item.imageUrl);
     final hasImage = item.imageUrl.isNotEmpty && file.existsSync();
 
-    return Card(
-      color: const Color(0xFF1E1E2C),
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    return Semantics(
+      identifier: 'container_detail_item_tile_$index',
+      child: Card(
+        color: const Color(0xFF1E1E2C),
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: ListTile(
         contentPadding: const EdgeInsets.all(12),
         leading: ClipRRect(
@@ -228,6 +230,6 @@ class ContainerDetailScreen extends ConsumerWidget {
           );
         },
       ),
-    );
+    ),);
   }
 }

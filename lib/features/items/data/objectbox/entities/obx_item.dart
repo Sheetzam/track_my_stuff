@@ -58,6 +58,7 @@ class ObxItem {
       description: description,
       imageUrl: imageUrl,
       createdAt: createdAt,
+      vector: embedding,
     );
   }
 }

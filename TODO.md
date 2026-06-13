@@ -33,6 +33,8 @@
 
 ## Repository Maintenance Completed
 - [x] **Large model file cleanup:** Removed 868MB `vision_mmproj.gguf` from git history, added to `.gitignore`, created placeholder file. Repository now pushes successfully to GitHub.
+- [x] **Core testing coverage & bug fix:** Wrote entity round-trip tests to fix vector-dropping bug in `ObxItem.toDomain()`. Added `InventoryProvider` unit tests for `addContainer`, `getItemsForContainer`, and `searchItems`. Added widget tests for `SearchScreen`.
+- [x] **Accessibility & E2E Testing Improvements:** Added missing `Semantics` identifiers to `HomeScreen`, `ContainerDetailScreen`, `SearchScreen`, `ItemIngestionScreen`, and `ReviewItemsScreen`. Created E2E test flows for container details and full round-trip item ingestion using a programmatic mock camera capture button in debug mode.
 
 ## Next Priorities
 - [ ] **#11 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.

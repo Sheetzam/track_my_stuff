@@ -1,0 +1,37 @@
+appId: ${APP_ID}
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      text: ".*New Container.*"
+    timeout: 10000
+- tapOn:
+    text: ".*New Container.*"
+    retryTapIfNoChange: true
+- assertVisible:
+    id: "image_picker_button"
+- tapOn:
+    id: "container_name_input"
+- inputText: "Holiday Decorations"
+- tapOn:
+    id: "container_description_input"
+- inputText: "Christmas lights and ornaments"
+- scroll
+- tapOn:
+    id: "save_container_button"
+- extendedWaitUntil:
+    visible:
+      id: "home_container_tile_0"
+    timeout: 5000
+- tapOn:
+    id: "home_container_tile_0"
+- extendedWaitUntil:
+    visible:
+      id: "container_detail_title"
+    timeout: 5000
+- assertVisible:
+    text: "Holiday Decorations"
+- assertVisible:
+    id: "container_detail_item_count"
+- assertVisible:
+    text: "0"

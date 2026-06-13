@@ -1,0 +1,84 @@
+appId: ${APP_ID}
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      text: ".*New Container.*"
+    timeout: 10000
+- tapOn:
+    text: ".*New Container.*"
+    retryTapIfNoChange: true
+- tapOn:
+    id: "container_name_input"
+- inputText: "Garage Bin 1"
+- tapOn:
+    id: "container_description_input"
+- inputText: "Garden tools and hardware"
+- scroll
+- tapOn:
+    id: "save_container_button"
+- extendedWaitUntil:
+    visible:
+      id: "home_container_tile_0"
+    timeout: 5000
+- tapOn:
+    id: "home_container_tile_0"
+- extendedWaitUntil:
+    visible:
+      id: "container_detail_title"
+    timeout: 5000
+- assertVisible:
+    text: "Garage Bin 1"
+- assertVisible:
+    id: "container_detail_add_items_fab"
+- tapOn:
+    id: "container_detail_add_items_fab"
+- extendedWaitUntil:
+    visible:
+      id: "mock_capture_button"
+    timeout: 5000
+- tapOn:
+    id: "mock_capture_button"
+- extendedWaitUntil:
+    visible:
+      id: "save_all_button"
+    timeout: 5000
+- tapOn:
+    id: "review_item_name_input_0"
+- eraseText: 11
+- inputText: "Garden Shovel"
+- tapOn:
+    id: "save_all_button"
+- extendedWaitUntil:
+    visible:
+      id: "home_search_button"
+    timeout: 5000
+- tapOn:
+    id: "home_search_button"
+- extendedWaitUntil:
+    visible:
+      id: "search_input"
+    timeout: 5000
+- tapOn:
+    id: "search_input"
+- inputText: "shovel"
+- tapOn:
+    id: "search_submit_button"
+- extendedWaitUntil:
+    visible:
+      id: "search_result_item_0"
+    timeout: 5000
+- assertVisible:
+    text: "Garden Shovel"
+- tapOn:
+    id: "search_result_item_0"
+- extendedWaitUntil:
+    visible:
+      id: "item_detail_title"
+    timeout: 5000
+- assertVisible:
+    text: "Garden Shovel"
+- assertVisible:
+    id: "item_detail_container_card"
+- assertVisible:
+    text: "Garage Bin 1"

@@ -5,7 +5,6 @@ import 'package:track_my_stuff/core/interfaces/local_database_interface.dart';
 import 'package:track_my_stuff/core/interfaces/object_detection_interface.dart';
 import 'package:track_my_stuff/core/interfaces/vision_llm_interface.dart';
 import 'package:track_my_stuff/features/items/data/ml/local_vision_engine.dart';
-import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector_stub.dart';
 import 'package:track_my_stuff/features/items/data/ml/mock_object_detector.dart';
 import 'package:track_my_stuff/features/items/data/ml/tflite_embedding_engine.dart';
 import 'package:track_my_stuff/features/items/domain/item.dart';
@@ -23,10 +22,6 @@ ILocalDatabase localDatabase(Ref ref) {
 /// Provider for the embedding engine interface.
 @riverpod
 IEmbeddingEngine embeddingEngine(Ref ref) => TfliteEmbeddingEngine();
-
-/// Whether ML Kit is available (controlled by --dart-define=USE_MLKIT=true/false).
-/// Defaults to true. Set to false for iOS Simulator builds (dev flavor).
-const _useMlKit = bool.fromEnvironment('USE_MLKIT', defaultValue: true);
 
 /// Provider for the object detection interface.
 /// Defaults to MockObjectDetector. On builds where ML Kit is available,

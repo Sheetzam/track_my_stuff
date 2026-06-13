@@ -100,5 +100,112 @@ void main() {
       expect(itemsInBox.length, 1);
       expect(itemsInBox.first.name, 'Hammer');
     });
+
+    test('adding a container successfully saves it to the local database', () async {
+      final fakeDb = FakeLocalDatabase();
+      final container = ProviderContainer(
+        overrides: [
+          localDatabaseProvider.overrideWith((ref) => fakeDb),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final inventoryController = container.read(inventoryProvider.notifier);
+      
+      final storageContainer = StorageContainer(
+        id: 'box-1',
+        name: 'Tools Box',
+        description: 'All my workshop tools',
+        imageUrl: '/box.png',
+        createdAt: DateTime(2026),
+      );
+
+      await inventoryController.addContainer(storageContainer);
+      
+      final allContainers = await fakeDb.getAllContainers();
+      expect(allContainers.length, 1);
+      expect(allContainers.first.name, 'Tools Box');
+    });
+
+    test('getItemsForContainer retrieves items specific to that container', () async {
+      final fakeDb = FakeLocalDatabase();
+      final container = ProviderContainer(
+        overrides: [
+          localDatabaseProvider.overrideWith((ref) => fakeDb),
+          embeddingEngineProvider.overrideWith((ref) => FakeEmbeddingEngine()),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final inventoryController = container.read(inventoryProvider.notifier);
+
+      final item1 = Item(
+        id: 'item-1',
+        containerId: 'box-1',
+        name: 'Hammer',
+        description: 'A heavy hammer',
+        imageUrl: '/path.png',
+        createdAt: DateTime(2026),
+      );
+      final item2 = Item(
+        id: 'item-2',
+        containerId: 'box-2',
+        name: 'Blanket',
+        description: 'Warm blanket',
+        imageUrl: '/path2.png',
+        createdAt: DateTime(2026),
+      );
+
+      await inventoryController.addItem(item1);
+      await inventoryController.addItem(item2);
+
+      final box1Items = await inventoryController.getItemsForContainer('box-1');
+      expect(box1Items.length, 1);
+      expect(box1Items.first.name, 'Hammer');
+
+      final box2Items = await inventoryController.getItemsForContainer('box-2');
+      expect(box2Items.length, 1);
+      expect(box2Items.first.name, 'Blanket');
+    });
+
+    test('searchItems generates an embedding and performs a vector search', () async {
+      final fakeDb = FakeLocalDatabase();
+      final fakeEmbedding = FakeEmbeddingEngine();
+      final container = ProviderContainer(
+        overrides: [
+          localDatabaseProvider.overrideWith((ref) => fakeDb),
+          embeddingEngineProvider.overrideWith((ref) => fakeEmbedding),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final inventoryController = container.read(inventoryProvider.notifier);
+
+      final item1 = Item(
+        id: 'item-1',
+        containerId: 'box-1',
+        name: 'Hammer',
+        description: 'A heavy hammer',
+        imageUrl: '/path.png',
+        createdAt: DateTime(2026),
+      );
+      final item2 = Item(
+        id: 'item-2',
+        containerId: 'box-1',
+        name: 'Screwdriver',
+        description: 'Phillips screwdriver',
+        imageUrl: '/path2.png',
+        createdAt: DateTime(2026),
+      );
+
+      await inventoryController.addItem(item1);
+      await inventoryController.addItem(item2);
+
+      final results = await inventoryController.searchItems('looking for tools');
+      
+      expect(results.length, 2);
+      expect(results.any((i) => i.name == 'Hammer'), true);
+      expect(results.any((i) => i.name == 'Screwdriver'), true);
+    });
   });
 }

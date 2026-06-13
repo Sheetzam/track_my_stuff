@@ -92,11 +92,14 @@ class _ReviewItemsScreenState extends ConsumerState<ReviewItemsScreen> {
         title: const Text('Review Items'),
         actions: [
           if (!_isAnalyzing)
-            TextButton(
-              onPressed: _isSaving ? null : _saveAllItems,
-              child: _isSaving 
-                ? const CircularProgressIndicator() 
-                : const Text('Save All', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            Semantics(
+              identifier: 'save_all_button',
+              child: TextButton(
+                onPressed: _isSaving ? null : _saveAllItems,
+                child: _isSaving 
+                  ? const CircularProgressIndicator() 
+                  : const Text('Save All', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
             ),
         ],
       ),
@@ -107,47 +110,53 @@ class _ReviewItemsScreenState extends ConsumerState<ReviewItemsScreen> {
               itemCount: widget.detectedObjects.length,
               itemBuilder: (context, index) {
                 final obj = widget.detectedObjects[index];
-                return Card(
-                  color: const Color(0xFF1E1E2C),
-                  margin: const EdgeInsets.only(bottom: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.file(obj.imageFile, width: 100, height: 100, fit: BoxFit.cover),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextField(
-                                controller: _nameControllers[index],
-                                decoration: const InputDecoration(
-                                  labelText: 'Item Name',
-                                  isDense: true,
-                                ),
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text('Suggested Tags:', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                              const SizedBox(height: 4),
-                              Wrap(
-                                spacing: 8,
-                                children: (_suggestedTags[index] ?? ['Analyzing...']).map((tag) => Chip(
-                                  label: Text(tag, style: const TextStyle(fontSize: 10)),
-                                  padding: EdgeInsets.zero,
-                                  visualDensity: VisualDensity.compact,
-                                )).toList(),
-                              ),
-                            ],
+                return Semantics(
+                  identifier: 'review_item_card_$index',
+                  child: Card(
+                    color: const Color(0xFF1E1E2C),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(obj.imageFile, width: 100, height: 100, fit: BoxFit.cover),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Semantics(
+                                  identifier: 'review_item_name_input_$index',
+                                  child: TextField(
+                                    controller: _nameControllers[index],
+                                    decoration: const InputDecoration(
+                                      labelText: 'Item Name',
+                                      isDense: true,
+                                    ),
+                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text('Suggested Tags:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                const SizedBox(height: 4),
+                                Wrap(
+                                  spacing: 8,
+                                  children: (_suggestedTags[index] ?? ['Analyzing...']).map((tag) => Chip(
+                                    label: Text(tag, style: const TextStyle(fontSize: 10)),
+                                    padding: EdgeInsets.zero,
+                                    visualDensity: VisualDensity.compact,
+                                  )).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
