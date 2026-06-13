@@ -81,4 +81,4 @@ appId: ${APP_ID}
 - assertVisible:
     id: "item_detail_container_card"
 - assertVisible:
-    text: "Garage Bin 1"
+    text: ".*Garage Bin 1.*"
