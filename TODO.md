@@ -37,11 +37,11 @@
 - [x] **Accessibility & E2E Testing Improvements:** Added missing `Semantics` identifiers to `HomeScreen`, `ContainerDetailScreen`, `SearchScreen`, `ItemIngestionScreen`, and `ReviewItemsScreen`. Created E2E test flows for container details and full round-trip item ingestion using a programmatic mock camera capture button in debug mode.
 
 ## Next Priorities
-- [ ] **#11 Fix vision model assets & E2E test:** `vision_model.gguf` is a 15-byte placeholder and `vision_mmproj.gguf` (868MB) bloats the APK without a usable model. Need to either: (a) download the real Moondream2 model GGUF, or (b) remove both from assets and gate `LocalVisionEngine` behind a feature flag so E2E tests pass without it. Emulator AVD has been bumped to 8GB RAM / 1GB heap / 12GB data partition to support the full model once available.
-- [ ] **#12 Maestro test isolation:** Running all flows together (`maestro test .maestro/`) fails because flows share app state. `home_screen` expects empty state but prior flows leave containers behind. Need to either: (a) add `clearState` or `clearKeychain` commands at the start of each flow, (b) add a wrapper script that runs `adb shell pm clear` between flows, or (c) make each flow resilient to pre-existing data.
-- [ ] **#12 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.
-- [ ] **#13 Bulk operations:** Add ability to move multiple items between containers, bulk tagging, batch delete.
-- [ ] **#14 Data export/import:** JSON export for backup, CSV export for spreadsheet analysis, import from other inventory apps.
-- [ ] **#15 Performance optimization:** Lazy loading for large inventories, image caching improvements, database query optimization.
-- [ ] **#16 UI/UX improvements:** Dark mode, accessibility enhancements, better onboarding flow, tutorial screens.
+- [x] **#11 Fix vision model assets & E2E test:** Downloaded matched Moondream2 GGUF pair (2.7GB text model + 868MB mmproj, f16) from HuggingFace. Emulator AVD bumped to 8GB RAM / 1GB heap / 12GB data partition. `LocalVisionEngine` hardened with placeholder detection and graceful error handling in `generateTags()`. All 4 Maestro E2E flows pass on Android emulator. Next step: quantize to Q4 (~1.2GB total) for production/mobile use.
+- [x] **#12 Maestro test isolation:** Added `clearState` to all Maestro flows so they can run together (`maestro test .maestro/`) without interfering. All 4 flows pass in a single batch run.
+- [ ] **#13 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.
+- [ ] **#14 Bulk operations:** Add ability to move multiple items between containers, bulk tagging, batch delete.
+- [ ] **#15 Data export/import:** JSON export for backup, CSV export for spreadsheet analysis, import from other inventory apps.
+- [ ] **#16 Performance optimization:** Lazy loading for large inventories, image caching improvements, database query optimization.
+- [ ] **#17 UI/UX improvements:** Dark mode, accessibility enhancements, better onboarding flow, tutorial screens.
 
