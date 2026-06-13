@@ -37,9 +37,11 @@
 - [x] **Accessibility & E2E Testing Improvements:** Added missing `Semantics` identifiers to `HomeScreen`, `ContainerDetailScreen`, `SearchScreen`, `ItemIngestionScreen`, and `ReviewItemsScreen`. Created E2E test flows for container details and full round-trip item ingestion using a programmatic mock camera capture button in debug mode.
 
 ## Next Priorities
-- [ ] **#11 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.
-- [ ] **#12 Bulk operations:** Add ability to move multiple items between containers, bulk tagging, batch delete.
-- [ ] **#13 Data export/import:** JSON export for backup, CSV export for spreadsheet analysis, import from other inventory apps.
-- [ ] **#14 Performance optimization:** Lazy loading for large inventories, image caching improvements, database query optimization.
-- [ ] **#15 UI/UX improvements:** Dark mode, accessibility enhancements, better onboarding flow, tutorial screens.
+- [ ] **#11 Fix vision model assets & E2E test:** `vision_model.gguf` is a 15-byte placeholder and `vision_mmproj.gguf` (868MB) bloats the APK without a usable model. Need to either: (a) download the real Moondream2 model GGUF, or (b) remove both from assets and gate `LocalVisionEngine` behind a feature flag so E2E tests pass without it. Emulator AVD has been bumped to 8GB RAM / 1GB heap / 12GB data partition to support the full model once available.
+- [ ] **#12 Maestro test isolation:** Running all flows together (`maestro test .maestro/`) fails because flows share app state. `home_screen` expects empty state but prior flows leave containers behind. Need to either: (a) add `clearState` or `clearKeychain` commands at the start of each flow, (b) add a wrapper script that runs `adb shell pm clear` between flows, or (c) make each flow resilient to pre-existing data.
+- [ ] **#12 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.
+- [ ] **#13 Bulk operations:** Add ability to move multiple items between containers, bulk tagging, batch delete.
+- [ ] **#14 Data export/import:** JSON export for backup, CSV export for spreadsheet analysis, import from other inventory apps.
+- [ ] **#15 Performance optimization:** Lazy loading for large inventories, image caching improvements, database query optimization.
+- [ ] **#16 UI/UX improvements:** Dark mode, accessibility enhancements, better onboarding flow, tutorial screens.
 

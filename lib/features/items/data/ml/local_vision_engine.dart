@@ -20,6 +20,12 @@ class LocalVisionEngine implements IVisionLLMEngine {
       final modelPath = await _copyAssetToFile('assets/models/vision_model.gguf');
       final mmprojPath = await _copyAssetToFile('assets/models/vision_mmproj.gguf');
 
+      // Verify model files are real (not placeholders)
+      final modelFile = File(modelPath);
+      if (await modelFile.length() < 1024 * 1024) {
+        throw Exception('Vision model is a placeholder file. Skipping initialization.');
+      }
+
       // 2. Initialize Llama
       // In version 0.1.2, parameters are passed via positional arguments
       _llama = Llama(
@@ -57,12 +63,17 @@ class LocalVisionEngine implements IVisionLLMEngine {
 
   @override
   Future<List<String>> generateTags(File imageFile) async {
-    final description = await analyzeImage(
-      imageFile, 
-      prompt: "Generate a comma-separated list of 5 keywords describing this item. Output ONLY the keywords.",
-    );
-    
-    return description.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    try {
+      final description = await analyzeImage(
+        imageFile, 
+        prompt: "Generate a comma-separated list of 5 keywords describing this item. Output ONLY the keywords.",
+      );
+      
+      return description.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    } catch (e) {
+      print('Vision engine unavailable for tag generation: $e');
+      return [];
+    }
   }
 
   Future<String> _copyAssetToFile(String assetPath) async {
@@ -71,9 +82,13 @@ class LocalVisionEngine implements IVisionLLMEngine {
     final localFile = File('${docsDir.path}/$fileName');
 
     if (!await localFile.exists()) {
-      final data = await rootBundle.load(assetPath);
-      final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      await localFile.writeAsBytes(bytes);
+      try {
+        final data = await rootBundle.load(assetPath);
+        final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        await localFile.writeAsBytes(bytes);
+      } catch (e) {
+        throw Exception('Asset not found or failed to load: $assetPath');
+      }
     }
 
     return localFile.path;

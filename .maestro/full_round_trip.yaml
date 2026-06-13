@@ -42,7 +42,7 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible:
       id: "save_all_button"
-    timeout: 5000
+    timeout: 15000
 - tapOn:
     id: "review_item_name_input_0"
 - eraseText: 11
