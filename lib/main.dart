@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:track_my_stuff/core/theme/app_theme.dart';
-import 'package:track_my_stuff/features/items/data/ml/ml_kit_object_detector.dart';
 import 'package:track_my_stuff/features/items/data/objectbox/objectbox_repository.dart';
 import 'package:track_my_stuff/features/items/ui/home_screen.dart';
 import 'package:track_my_stuff/features/items/providers/inventory_provider.dart';
@@ -16,7 +15,6 @@ void main() async {
     ProviderScope(
       overrides: [
         localDatabaseProvider.overrideWithValue(objectBoxRepo),
-        objectDetectionEngineProvider.overrideWithValue(MlKitObjectDetector()),
       ],
       child: const MyApp(),
     ),

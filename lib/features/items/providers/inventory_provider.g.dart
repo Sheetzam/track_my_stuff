@@ -106,18 +106,14 @@ final class EmbeddingEngineProvider
   }
 }
 
-String _$embeddingEngineHash() => r'0743a321bc1e2751fc1aa84eaa21933150a1532e';
+String _$embeddingEngineHash() => r'59fa2a6ef55ef36d59ee8f2b924cad5a75b79504';
 
 /// Provider for the object detection interface.
-/// Defaults to MockObjectDetector. On builds where ML Kit is available,
-/// main.dart overrides this with the real MlKitObjectDetector.
 
 @ProviderFor(objectDetectionEngine)
 final objectDetectionEngineProvider = ObjectDetectionEngineProvider._();
 
 /// Provider for the object detection interface.
-/// Defaults to MockObjectDetector. On builds where ML Kit is available,
-/// main.dart overrides this with the real MlKitObjectDetector.
 
 final class ObjectDetectionEngineProvider
     extends
@@ -128,8 +124,6 @@ final class ObjectDetectionEngineProvider
         >
     with $Provider<IObjectDetectionEngine> {
   /// Provider for the object detection interface.
-  /// Defaults to MockObjectDetector. On builds where ML Kit is available,
-  /// main.dart overrides this with the real MlKitObjectDetector.
   ObjectDetectionEngineProvider._()
     : super(
         from: null,
@@ -165,7 +159,7 @@ final class ObjectDetectionEngineProvider
 }
 
 String _$objectDetectionEngineHash() =>
-    r'2e61383664d9b7118506a88885880482a5f9c761';
+    r'1839a1afd0169b1ab7d375b0c8d0c2b2c39a0b35';
 
 /// Provider for the vision LLM interface.
 
@@ -216,7 +210,7 @@ final class VisionLLMEngineProvider
   }
 }
 
-String _$visionLLMEngineHash() => r'd6277513678d5fe2391440825586a784e34fcd44';
+String _$visionLLMEngineHash() => r'23b1feb8e82bf339f7394818590c42d1c8818b63';
 
 /// The main controller for managing inventory items.
 

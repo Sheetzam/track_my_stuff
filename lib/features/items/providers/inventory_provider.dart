@@ -4,9 +4,9 @@ import 'package:track_my_stuff/core/interfaces/embedding_engine_interface.dart';
 import 'package:track_my_stuff/core/interfaces/local_database_interface.dart';
 import 'package:track_my_stuff/core/interfaces/object_detection_interface.dart';
 import 'package:track_my_stuff/core/interfaces/vision_llm_interface.dart';
-import 'package:track_my_stuff/features/items/data/ml/local_vision_engine.dart';
-import 'package:track_my_stuff/features/items/data/ml/mock_object_detector.dart';
-import 'package:track_my_stuff/features/items/data/ml/tflite_embedding_engine.dart';
+import 'package:track_my_stuff/features/items/data/ml/native_embedding_engine.dart';
+import 'package:track_my_stuff/features/items/data/ml/native_object_detector.dart';
+import 'package:track_my_stuff/features/items/data/ml/native_vision_engine.dart';
 import 'package:track_my_stuff/features/items/domain/item.dart';
 import 'package:track_my_stuff/features/items/domain/storage_container.dart';
 
@@ -21,17 +21,15 @@ ILocalDatabase localDatabase(Ref ref) {
 
 /// Provider for the embedding engine interface.
 @riverpod
-IEmbeddingEngine embeddingEngine(Ref ref) => TfliteEmbeddingEngine();
+IEmbeddingEngine embeddingEngine(Ref ref) => NativeEmbeddingEngine();
 
 /// Provider for the object detection interface.
-/// Defaults to MockObjectDetector. On builds where ML Kit is available,
-/// main.dart overrides this with the real MlKitObjectDetector.
 @riverpod
-IObjectDetectionEngine objectDetectionEngine(Ref ref) => MockObjectDetector();
+IObjectDetectionEngine objectDetectionEngine(Ref ref) => NativeObjectDetector();
 
 /// Provider for the vision LLM interface.
 @riverpod
-IVisionLLMEngine visionLLMEngine(Ref ref) => LocalVisionEngine();
+IVisionLLMEngine visionLLMEngine(Ref ref) => NativeVisionEngine();
 
 /// The main controller for managing inventory items.
 @riverpod

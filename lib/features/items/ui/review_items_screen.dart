@@ -47,12 +47,84 @@ class _ReviewItemsScreenState extends ConsumerState<ReviewItemsScreen> {
         if (mounted) {
           setState(() {
             _suggestedTags[i] = tags;
+            if (tags.isNotEmpty) {
+              final currentText = _nameControllers[i]?.text.trim() ?? '';
+              final defaultText = widget.detectedObjects[i].label ?? 'Item ${i + 1}';
+              if (currentText == defaultText ||
+                  currentText == 'Object' ||
+                  currentText == 'Mock Object' ||
+                  currentText == 'Item ${i + 1}' ||
+                  currentText.isEmpty) {
+                final topTag = tags.first;
+                final capitalized = topTag[0].toUpperCase() + topTag.substring(1);
+                _nameControllers[i]?.text = capitalized;
+              }
+            }
           });
         }
       }));
     }
 
     setState(() => _isAnalyzing = false);
+  }
+  Future<void> _showLoopOptionsDialog() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1E1E2C),
+          title: const Text(
+            'Items Saved!',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'What would you like to do next?',
+            style: TextStyle(color: Colors.white70),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  identifier: 'loop_add_more_button',
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close dialog
+                      Navigator.of(this.context).pop(); // Pop ReviewItemsScreen (returns to ItemIngestionScreen)
+                    },
+                    child: const Text('Add More Items to this Box'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Semantics(
+                  identifier: 'loop_change_container_button',
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close dialog
+                      Navigator.of(this.context).popUntil((route) => route.isFirst); // Go to Home
+                    },
+                    child: const Text('Move to Another Box'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Semantics(
+                  identifier: 'loop_done_button',
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close dialog
+                      Navigator.of(this.context).popUntil((route) => route.isFirst); // Go to Home
+                    },
+                    child: const Text('Done Cataloging', style: TextStyle(color: Colors.grey)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _saveAllItems() async {
@@ -75,17 +147,14 @@ class _ReviewItemsScreenState extends ConsumerState<ReviewItemsScreen> {
       }
 
       if (mounted) {
-        // Go back to home screen
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        _showLoopOptionsDialog();
       }
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
       }
     }
-  }
-
-  @override
+  }  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

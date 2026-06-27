@@ -11,10 +11,10 @@ appId: ${APP_ID}
     retryTapIfNoChange: true
 - tapOn:
     id: "container_name_input"
-- inputText: "Garage Bin 1"
+- inputText: "Spare Electronics"
 - tapOn:
     id: "container_description_input"
-- inputText: "Garden tools and hardware"
+- inputText: "electronics, cables, microcontrollers"
 - scroll
 - tapOn:
     id: "save_container_button"
@@ -29,7 +29,7 @@ appId: ${APP_ID}
       id: "container_detail_title"
     timeout: 5000
 - assertVisible:
-    text: "Garage Bin 1"
+    text: "Spare Electronics"
 - assertVisible:
     id: "container_detail_add_items_fab"
 - tapOn:
@@ -44,12 +44,18 @@ appId: ${APP_ID}
     visible:
       id: "save_all_button"
     timeout: 15000
-- tapOn:
-    id: "review_item_name_input_0"
-- eraseText: 11
-- inputText: "Garden Shovel"
+- extendedWaitUntil:
+    visible:
+      text: "Microcontroller"
+    timeout: 10000
 - tapOn:
     id: "save_all_button"
+- extendedWaitUntil:
+    visible:
+      id: "loop_done_button"
+    timeout: 10000
+- tapOn:
+    id: "loop_done_button"
 - extendedWaitUntil:
     visible:
       id: "home_search_button"
@@ -62,7 +68,7 @@ appId: ${APP_ID}
     timeout: 5000
 - tapOn:
     id: "search_input"
-- inputText: "shovel"
+- inputText: "microcontroller"
 - tapOn:
     id: "search_submit_button"
 - extendedWaitUntil:
@@ -70,7 +76,7 @@ appId: ${APP_ID}
       id: "search_result_item_0"
     timeout: 5000
 - assertVisible:
-    text: "Garden Shovel"
+    text: ".*Microcontroller.*"
 - tapOn:
     id: "search_result_item_0"
 - extendedWaitUntil:
@@ -78,8 +84,8 @@ appId: ${APP_ID}
       id: "item_detail_title"
     timeout: 5000
 - assertVisible:
-    text: "Garden Shovel"
+    text: "Microcontroller"
 - assertVisible:
     id: "item_detail_container_card"
 - assertVisible:
-    text: ".*Garage Bin 1.*"
+    text: ".*Spare Electronics.*"

@@ -64,27 +64,21 @@ class _ItemIngestionScreenState extends ConsumerState<ItemIngestionScreen> {
     });
 
     try {
-      // Create a simple 100x100 white image with a red square
-      final img.Image image = img.Image(width: 100, height: 100);
-      img.fill(image, color: img.ColorRgb8(255, 255, 255));
-      img.fillRect(image, x1: 25, y1: 25, x2: 75, y2: 75, color: img.ColorRgb8(255, 0, 0));
+      // Load pre-loaded reference image of electronics from assets
+      final data = await DefaultAssetBundle.of(context).load('assets/test.jpg');
+      final bytes = data.buffer.asUint8List();
 
       final tempDir = await getTemporaryDirectory();
-      final mockImageFile = File('${tempDir.path}/mock_captured_image.png');
-      await mockImageFile.writeAsBytes(img.encodePng(image));
+      final mockImageFile = File('${tempDir.path}/test.jpg');
+      await mockImageFile.writeAsBytes(bytes);
 
       setState(() {
         _image = mockImageFile;
       });
 
-      final objects = [
-        DetectedObject(
-          boundingBox: const Rect.fromLTWH(0, 0, 100, 100),
-          imageFile: mockImageFile,
-          label: 'Mock Object',
-          confidence: 1.0,
-        ),
-      ];
+      // Use the actual object detection engine to analyze the image
+      final detector = ref.read(objectDetectionEngineProvider);
+      final objects = await detector.detectObjects(mockImageFile);
 
       if (mounted) {
         await Navigator.push<void>(

@@ -67,11 +67,7 @@ if [[ -z "$SIMULATOR_DEVICE_ID" ]]; then
 fi
 
 echo "Building for simulator ($SIMULATOR_NAME)..."
-# Disable ML Kit for simulator build (no arm64-simulator slice available).
-# Use main_dev.dart entry point which doesn't import ML Kit.
-sed -i '' 's/^  google_mlkit_object_detection:/  # google_mlkit_object_detection:/' pubspec.yaml
-flutter pub get
-flutter build ios --simulator --debug --flavor dev --dart-define=USE_MLKIT=false -t lib/main_dev.dart
+flutter build ios --simulator --debug --flavor dev
 
 # Uninstall any previous version before installing
 xcrun simctl uninstall "$SIMULATOR_DEVICE_ID" "$SIMULATOR_APP_ID" 2>/dev/null || true
@@ -95,13 +91,7 @@ echo "==========================================="
 # Confirm device is connected
 if ! flutter devices 2>/dev/null | grep -q "$DEVICE_UDID"; then
   echo "⚠️  Physical iPhone ($DEVICE_UDID) not connected — skipping Phase 2."
-  # Still restore ML Kit in pubspec for clean state
-  sed -i '' 's/^  # google_mlkit_object_detection:/  google_mlkit_object_detection:/' pubspec.yaml
 else
-  # Re-enable ML Kit for physical device build
-  sed -i '' 's/^  # google_mlkit_object_detection:/  google_mlkit_object_detection:/' pubspec.yaml
-  flutter pub get
-
   echo "Building release for physical device..."
   flutter build ios --release --flavor prod
 

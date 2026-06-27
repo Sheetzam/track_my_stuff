@@ -36,12 +36,35 @@
 - [x] **Accessibility & E2E Testing Improvements:** Added missing `Semantics` identifiers to `HomeScreen`, `ContainerDetailScreen`, `SearchScreen`, `ItemIngestionScreen`, and `ReviewItemsScreen`. Created E2E test flows for container details and full round-trip item ingestion using a programmatic mock camera capture button in debug mode.
 
 ## Next Priorities
-- [x] **#11 Fix vision model assets & E2E test:** Downloaded matched Moondream2 GGUF pair from HuggingFace. Quantized text model from f16 (2.7GB) to Q4_K_M (877MB) via `llama-quantize`. Emulator AVD bumped to 8GB RAM / 1GB heap / 12GB data partition. `LocalVisionEngine` hardened with placeholder detection and graceful error handling in `generateTags()`. All 4 Maestro E2E flows pass on Android emulator and physical device (Pixel 10 Pro Fold, Android 16).
-- [x] **#12 Maestro test isolation:** Added `clearState` to all Maestro flows so they can run together (`maestro test .maestro/`) without interfering. All 4 flows pass in a single batch run.
-- [ ] **#13 Multi-capture item ingestion:** Currently the flow is: take one photo → review detected items → save → back to home. Instead, after saving reviewed items, return to the camera/capture screen so the user can take multiple photos in a row. Add a "Done" button to explicitly return to home when finished adding items to a container.
+- [ ] **#13 Multi-capture item ingestion (PRD Flow 1 Step 6):** Refactor the item ingestion flow to repeat steps 2 through 5 (capturing photos, object detection/extraction, tag review, and adding optional context) in a loop. Provide options for the user to:
+  - Repeat the process for another item/photo in the same container.
+  - Move on to another container/box.
+  - Stop adding items and return to the home screen.
+- [ ] **#19 Android Native AI (AICore) Integration:**
+  - [ ] Research and integrate Google AI Edge / Google Play Services AICore API for Flutter.
+  - [ ] Implement `AndroidAicoreEmbeddingEngine` implementing `IEmbeddingEngine` using on-device AICore.
+  - [ ] Implement `AndroidAicoreTagGenerator` implementing `ITagGenerator` (utilizing Gemini Nano on-device).
+  - [ ] Swap out TFLite and Moondream/ML Kit dependencies for the new AICore engine in V1 Android builds.
+- [ ] **#20 iOS Native AI (Apple Intelligence & CoreML) Integration:**
+  - [ ] Write Swift native platform channel implementation for Apple Intelligence APIs and CoreML.
+  - [ ] Implement `AppleIntelligenceEmbeddingEngine` implementing `IEmbeddingEngine`.
+  - [ ] Implement `AppleIntelligenceVisionEngine` implementing `ITagGenerator` (utilizing Apple Intelligence and CoreML for native object detection and tag generation).
+  - [ ] Swap out ML Kit/TFLite dependencies for the new native iOS Apple Intelligence/CoreML engine in V1 iOS builds.
+- [ ] **#21 Clean up & Remove unneeded V1 assets, models, and code:**
+  - [ ] Delete now unneeded model files (e.g., MiniLM model/vocab assets, Moondream2 model placeholders/assets).
+  - [ ] Remove TFLite/ML Kit-specific dart implementations (like `TfliteEmbeddingEngine`, `WordPieceTokenizer`, `LocalVisionEngine`).
+  - [ ] Clean up `pubspec.yaml` (remove `google_mlkit_object_detection`, `tflite_flutter`, etc. from V1 active dependencies).
+  - [ ] Clean up build configuration files (e.g., android build.gradle, ios Podfile/configurations, setup/patch scripts).
+- [ ] **#22 Write unit tests and E2E tests for new native implementations:**
+  - [ ] Write unit tests for `AndroidAicoreEmbeddingEngine` and `AndroidAicoreTagGenerator` (using platform channel mocks).
+  - [ ] Write unit tests for `AppleIntelligenceEmbeddingEngine` and `AppleIntelligenceVisionEngine` (using platform channel mocks).
+  - [ ] Update existing integration/widget/E2E tests to verify behavior with native engines and mock/dev modes.
+
+## Future / V2 Priorities
 - [ ] **#14 Enhanced search functionality:** Improve search result ranking, add filters (by container, date, tags), implement search history.
 - [ ] **#15 Bulk operations:** Add ability to move multiple items between containers, bulk tagging, batch delete.
 - [ ] **#16 Data export/import:** JSON export for backup, CSV export for spreadsheet analysis, import from other inventory apps.
 - [ ] **#17 Performance optimization:** Lazy loading for large inventories, image caching improvements, database query optimization.
 - [ ] **#18 UI/UX improvements:** Dark mode, accessibility enhancements, better onboarding flow, tutorial screens.
+- [ ] **#23 Cross-Platform Fallback Engines (V2):** Re-introduce TFLite (`tflite_flutter` with MiniLM) and Google ML Kit as fallbacks for older devices or platforms lacking native AICore / Apple Intelligence support.
 
